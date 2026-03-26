@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PGB Succession Planning — Collaborative Workbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C; --gold-light: #E8C96A; --gold-dim: #7A6428;
+    --bg: #0C0C0A; --bg-card: #131310; --bg-panel: #181814; --bg-input: #0E0E0B;
+    --text: #EDE5CC; --muted: #7A7060; --dim: #4A4840;
+    --border: rgba(201,168,76,0.16); --border-hi: rgba(201,168,76,0.5);
+    --green: #5B9870; --amber: #C4872A; --blue: #4878A0; --red: #B84848;
+    --online: #5B9870;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
+
+  /* NOISE */
+  body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.5;}
+
+  /* JOIN SCREEN */
+  #joinScreen{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;}
+  .join-box{width:420px;padding:48px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;text-align:center;}
+  .join-logo{font-family:'Cinzel',serif;font-size:36px;color:var(--gold);letter-spacing:.1em;margin-bottom:4px;}
+  .join-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--muted);margin-bottom:32px;}
+  .join-box label{text-align:left;display:block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .join-box input,.join-box select{width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:3px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:11px 14px;outline:none;transition:border-color .2s;margin-bottom:16px;}
+  .join-box input:focus,.join-box select:focus{border-color:var(--border-hi);}
+  .join-btn{width:100%;padding:13px;background:var(--gold);color:#0C0C0A;border:none;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:4px;}
+  .join-btn:hover{background:var(--gold-light);transform:translateY(-1px);}
+  .join-divider{width:40px;height:1px;background:var(--border);margin:24px auto;} 
+  .session-info{font-size:11px;color:var(--dim);}
+
+  /* TOPBAR */
+  #topBar{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;background:rgba(12,12,10,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;}
+  .tb-logo{font-family:'Cinzel',serif;font-size:15px;color:var(--gold);letter-spacing:.1em;}
+  .tb-sep{width:1px;height:18px;background:var(--border);}
+  .tb-section{font-size:11px;color:var(--muted);letter-spacing:.05em;flex:1;}
+  .tb-users{display:flex;align-items:center;gap:6px;}
+  .tb-avatar{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);background:var(--bg-panel);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--gold);position:relative;cursor:default;}
+  .tb-avatar::after{content:'';position:absolute;bottom:-1px;right:-1px;width:7px;height:7px;border-radius:50%;background:var(--online);border:1.5px solid var(--bg);}
+  .tb-save{padding:7px 16px;background:transparent;border:1px solid var(--border);border-radius:3px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+  .tb-save:hover{border-color:var(--border-hi);color:var(--text);}
+  .tb-save.saved{border-color:var(--green);color:var(--green);}
+  .sync-dot{width:7px;height:7px;border-radius:50%;background:var(--dim);transition:background .3s;}
+  .sync-dot.syncing{background:var(--amber);animation:pulse .8s infinite;}
+  .sync-dot.synced{background:var(--green);}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+  /* SIDEBAR */
+  #sidebar{position:fixed;left:0;top:52px;bottom:0;width:210px;background:var(--bg-card);border-right:1px solid var(--border);z-index:100;display:flex;flex-direction:column;}
+  .nav-scroll{flex:1;overflow-y:auto;padding:12px 0;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;border-left:2px solid transparent;color:var(--muted);font-size:12px;font-weight:500;transition:all .18s;}
+  .nav-item:hover{color:var(--text);background:rgba(201,168,76,.05);}
+  .nav-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.07);}
+  .nav-num{font-family:'Cinzel',serif;font-size:10px;color:var(--dim);min-width:16px;}
+  .nav-item.active .nav-num{color:var(--gold-dim);}
+  .nav-progress{height:2px;background:var(--bg-panel);margin:0 20px 4px;}
+  .nav-progress-fill{height:100%;background:var(--gold-dim);border-radius:1px;transition:width .4s;}
+  .sidebar-who{padding:14px 20px;border-top:1px solid var(--border);}
+  .who-label{font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}
+  .who-list{display:flex;flex-direction:column;gap:5px;}
+  .who-row{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);}
+  .who-dot{width:6px;height:6px;border-radius:50%;background:var(--online);flex-shrink:0;}
+  .who-you{color:var(--gold);font-weight:600;}
+
+  /* MAIN */
+  #main{margin-left:210px;padding-top:52px;min-height:100vh;}
+  .section{display:none;padding:44px 52px;max-width:980px;animation:fadeUp .3s ease;}
+  .section.active{display:block;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  /* SECTION HEADER */
+  .sh-tag{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:8px;}
+  .sh-title{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;line-height:1.1;margin-bottom:10px;}
+  .sh-title em{font-style:italic;color:var(--gold);}
+  .sh-desc{font-size:13px;color:var(--muted);max-width:560px;line-height:1.75;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+
+  /* CARDS */
+  .card{background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:18px;}
+  .card-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .card-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--gold-dim),transparent);}
+
+  /* LIVE INDICATOR — shows who else is editing a field */
+  .live-field{position:relative;}
+  .live-badge{position:absolute;top:-18px;right:0;font-size:10px;color:var(--amber);background:rgba(196,135,42,.12);border:1px solid rgba(196,135,42,.3);border-radius:2px;padding:1px 6px;pointer-events:none;opacity:0;transition:opacity .2s;}
+  .live-badge.visible{opacity:1;}
+
+  /* FORMS */
+  label{display:block;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px;}
+  input[type="text"],textarea,select{width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:3px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 13px;outline:none;transition:border-color .2s;resize:vertical;}
+  input[type="text"]:focus,textarea:focus,select:focus{border-color:var(--border-hi);box-shadow:0 0 0 3px rgba(201,168,76,.05);}
+  textarea{min-height:78px;}
+  select option{background:var(--bg-card);}
+  .field{margin-bottom:14px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  .helper{font-size:11px;color:var(--dim);font-style:italic;margin-top:4px;}
+  .callout{background:rgba(201,168,76,.05);border-left:3px solid var(--gold-dim);padding:11px 16px;border-radius:0 3px 3px 0;font-size:12px;color:var(--muted);margin:12px 0;font-style:italic;}
+  hr{border:none;border-top:1px solid var(--border);margin:18px 0;}
+
+  /* RATING BUTTONS */
+  .rg{display:flex;gap:5px;}
+  .rb{flex:1;padding:8px 4px;border:1px solid var(--border);border-radius:3px;background:var(--bg-input);color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;text-align:center;font-family:'DM Sans',sans-serif;}
+  .rb:hover{border-color:var(--border-hi);color:var(--text);}
+  .rb.rp{background:rgba(91,152,112,.18);border-color:var(--green);color:var(--green);}
+  .rb.rm{background:rgba(196,135,42,.18);border-color:var(--amber);color:var(--amber);}
+  .rb.rn{background:rgba(184,72,72,.18);border-color:var(--red);color:var(--red);}
+
+  /* TIER CARDS */
+  .tier-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0;}
+  .tc{border:1px solid var(--border);border-radius:3px;padding:12px;text-align:center;cursor:pointer;transition:all .2s;}
+  .tc:hover{transform:translateY(-2px);}
+  .tc.sel{box-shadow:0 0 0 2px var(--gold);}
+  .tc-lbl{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;margin-bottom:5px;}
+  .tc-cr{font-size:10px;color:var(--dim);line-height:1.5;}
+
+  /* ENTRIES */
+  .entry{background:var(--bg-panel);border:1px solid var(--border);border-radius:4px;padding:20px;margin-bottom:12px;position:relative;}
+  .entry-n{position:absolute;top:14px;right:16px;font-family:'Cinzel',serif;font-size:22px;color:var(--dim);font-weight:600;}
+  .add-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border:1px dashed var(--border);border-radius:3px;background:transparent;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:all .2s;margin-top:4px;}
+  .add-btn:hover{border-color:var(--gold-dim);color:var(--gold);}
+
+  /* BTNS */
+  .btn{padding:10px 22px;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:none;transition:all .2s;}
+  .btn-primary{background:var(--gold);color:#0C0C0A;}
+  .btn-primary:hover{background:var(--gold-light);transform:translateY(-1px);}
+  .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);}
+  .btn-ghost:hover{border-color:var(--border-hi);color:var(--text);}
+  .btn-del{background:rgba(184,72,72,.12);border:1px solid var(--red);color:var(--red);padding:6px 12px;font-size:11px;}
+  .btn-sm{padding:6px 14px;font-size:11px;}
+
+  /* PHASE */
+  .phase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+  .phase-box{background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:13px;}
+  .phase-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:3px;}
+  .phase-title{font-size:12px;font-weight:600;color:var(--gold);margin-bottom:8px;}
+
+  /* BENCH */
+  .bench{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px;}
+  .bc{border-radius:3px;padding:16px;text-align:center;border:1px solid;}
+  .bc.now{border-color:var(--green);background:rgba(91,152,112,.06);}
+  .bc.soon{border-color:var(--blue);background:rgba(72,120,160,.06);}
+  .bc.later{border-color:var(--amber);background:rgba(196,135,42,.06);}
+  .bc.unr{border-color:var(--red);background:rgba(184,72,72,.06);}
+  .bc-num{font-family:'Cinzel',serif;font-size:32px;font-weight:600;line-height:1;margin-bottom:4px;}
+  .bc.now .bc-num{color:var(--green);}
+  .bc.soon .bc-num{color:var(--blue);}
+  .bc.later .bc-num{color:var(--amber);}
+  .bc.unr .bc-num{color:var(--red);}
+  .bc-lbl{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+
+  /* DASHBOARD TABLE */
+  .dt{width:100%;border-collapse:collapse;font-size:12px;}
+  .dt th{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;color:var(--gold-dim);text-transform:uppercase;padding:9px 10px;text-align:left;border-bottom:1px solid var(--border);font-weight:400;}
+  .dt td{padding:8px 10px;border-bottom:1px solid rgba(201,168,76,.05);vertical-align:middle;}
+  .dt tr:last-child td{border-bottom:none;}
+  .dt input{padding:6px 8px;font-size:12px;}
+  .dt select{padding:5px 7px;font-size:11px;}
+
+  /* ROCK TAGS */
+  .rt{display:inline-block;padding:2px 8px;border-radius:2px;font-size:10px;font-weight:600;letter-spacing:.06em;}
+  .rt-s{background:rgba(91,152,112,.15);color:var(--green);}
+  .rt-c{background:rgba(196,135,42,.15);color:var(--amber);}
+  .rt-p{background:rgba(72,120,160,.15);color:var(--blue);}
+  .rt-j{background:rgba(201,168,76,.15);color:var(--gold);}
+
+  /* VALUE ROW */
+  .vr{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(201,168,76,.07);}
+  .vr:last-child{border-bottom:none;}
+  .vn{font-size:13px;font-weight:500;}
+  .vs{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:11px;color:var(--dim);margin-top:1px;}
+
+  /* GWC */
+  .gwc-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .gwci{background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:11px;}
+  .gwc-lbl{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;color:var(--gold);margin-bottom:3px;}
+  .gwc-desc{font-size:11px;color:var(--dim);margin-bottom:7px;}
+
+  /* COMP */
+  .comp-g{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px;}
+  .comp-r{display:flex;align-items:center;background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:9px 11px;gap:9px;}
+  .comp-n{flex:1;font-size:12px;font-weight:500;}
+  .comp-num{font-family:'Cinzel',serif;font-size:9px;color:var(--gold-dim);min-width:14px;}
+
+  /* MILESTONES */
+  .ms-track{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0;}
+  .ms-band{background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:11px;}
+  .ms-lbl{font-family:'Cinzel',serif;font-size:9px;color:var(--gold-dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px;}
+
+  /* SUCCESS CHECKS */
+  .sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px;}
+  .sc-item{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--muted);}
+  .sc-item input[type="checkbox"]{width:auto;margin-top:2px;accent-color:var(--gold);cursor:pointer;}
+
+  /* OVERVIEW CARDS */
+  .ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .ov-card{background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:14px;cursor:pointer;transition:all .2s;}
+  .ov-card:hover{border-color:var(--gold-dim);transform:translateY(-2px);}
+  .ov-num{font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);letter-spacing:.15em;margin-bottom:5px;}
+  .ov-name{font-weight:600;font-size:13px;margin-bottom:3px;}
+  .ov-desc{font-size:11px;color:var(--muted);}
+
+  /* CONTRIBUTORS ROW */
+  .contrib-row{display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap;}
+  .contrib-chip{font-size:10px;padding:2px 8px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);border-radius:10px;color:var(--gold-dim);}
+
+  @media print{#joinScreen,#topBar,#sidebar,.add-btn,.btn-del,.btn-primary,.btn-ghost{display:none!important;}#main{margin-left:0;padding-top:0;}.section{display:block!important;page-break-before:always;}.section:first-of-type{page-break-before:avoid;}}
+</style>
+</head>
+<body>
+
+<!-- JOIN SCREEN -->
+<div id="joinScreen">
+  <div class="join-box">
+    <div class="join-logo">PGB</div>
+    <div class="join-sub">Succession Planning Workshop</div>
+    <div class="field">
+      <label>Your Full Name</label>
+      <input type="text" id="joinName" placeholder="e.g. Maria Santos" maxlength="40">
+    </div>
+    <div class="field">
+      <label>Your Role / Position</label>
+      <input type="text" id="joinRole" placeholder="e.g. General Manager, PSC" maxlength="60">
+    </div>
+    <div class="field">
+      <label>Business Unit</label>
+      <select id="joinBU">
+        <option value="">Select your BU</option>
+        <option>PSC – Primary Structures Corporation</option>
+        <option>ABC – A&B Construction</option>
+        <option>CSI – Construction Services Inc.</option>
+        <option>PHI – Primary Holdings Inc.</option>
+        <option>PPC – Primary Properties Corp.</option>
+        <option>PGB – Group Level</option>
+      </select>
+    </div>
+    <button class="join-btn" onclick="joinSession()">Enter Workshop →</button>
+    <div class="join-divider"></div>
+    <div class="session-info">All inputs are shared live with the group.<br>Your progress is saved automatically.</div>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div id="topBar" style="display:none;">
+  <div class="tb-logo">PGB</div>
+  <div class="tb-sep"></div>
+  <div class="tb-section" id="tbTitle">Succession Planning Workshop</div>
+  <div class="tb-users" id="tbUsers"></div>
+  <div class="tb-sep"></div>
+  <div class="sync-dot" id="syncDot" title="Sync status"></div>
+  <div style="font-size:10px;color:var(--dim);margin-left:5px;" id="syncLabel">Live</div>
+  <div class="tb-sep"></div>
+  <button class="tb-save" onclick="window.print()">Export PDF</button>
+</div>
+
+<!-- SIDEBAR -->
+<div id="sidebar" style="display:none;">
+  <div class="nav-scroll">
+    <div style="padding:14px 20px 8px;">
+      <div style="font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;">Workshop Sections</div>
+    </div>
+    <div class="nav-progress" id="navProg"><div class="nav-progress-fill" id="navProgFill" style="width:0%"></div></div>
+    <div class="nav-item active" onclick="go('s0',this)"><span class="nav-num">—</span>Overview</div>
+    <div class="nav-item" onclick="go('s1',this)"><span class="nav-num">1</span>Identifying Successors</div>
+    <div class="nav-item" onclick="go('s2',this)"><span class="nav-num">2</span>Understanding the Role</div>
+    <div class="nav-item" onclick="go('s3',this)"><span class="nav-num">3</span>PA & GWC Grid</div>
+    <div class="nav-item" onclick="go('s4',this)"><span class="nav-num">4</span>Growth Journey Map</div>
+    <div class="nav-item" onclick="go('s5',this)"><span class="nav-num">5</span>Dev Rock Planner</div>
+    <div class="nav-item" onclick="go('s6',this)"><span class="nav-num">6</span>Dashboard</div>
+  </div>
+  <div class="sidebar-who">
+    <div class="who-label">Online Now</div>
+    <div class="who-list" id="whoList"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main" style="display:none;">
+
+  <!-- S0: OVERVIEW -->
+  <div class="section active" id="s0">
+    <div class="sh-tag">Succession Planning Workshop · PGB</div>
+    <div class="sh-title">Identifying &amp; Developing<br><em>Your Next Successors</em></div>
+    <div class="sh-desc">A half-day working session for PGB's senior leadership team. This workbook is shared live — every input you make is visible to all participants in real time.</div>
+
+    <div class="card">
+      <div class="card-title">Session Details</div>
+      <div class="row2">
+        <div class="field live-field">
+          <label>Workshop Date</label>
+          <input type="text" data-key="session_date" placeholder="e.g. April 15, 2025" oninput="sync(this)">
+        </div>
+        <div class="field live-field">
+          <label>Facilitator</label>
+          <input type="text" data-key="session_facilitator" placeholder="Facilitator name" oninput="sync(this)">
+        </div>
+        <div class="field live-field">
+          <label>Session Location / Platform</label>
+          <input type="text" data-key="session_location" placeholder="e.g. Boardroom, PSC HQ" oninput="sync(this)">
+        </div>
+        <div class="field live-field">
+          <label>Dashboard Owner</label>
+          <input type="text" data-key="session_dashboard_owner" placeholder="Name of Dashboard Owner" oninput="sync(this)">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Today's 6 Elements</div>
+      <div class="ov-grid">
+        <div class="ov-card" onclick="go('s1',document.querySelectorAll('.nav-item')[1])"><div class="ov-num">01</div><div class="ov-name">Candidate Identification</div><div class="ov-desc">Who has the potential to step into critical roles?</div></div>
+        <div class="ov-card" onclick="go('s2',document.querySelectorAll('.nav-item')[2])"><div class="ov-num">02</div><div class="ov-name">Role Understanding</div><div class="ov-desc">What does the role truly demand?</div></div>
+        <div class="ov-card" onclick="go('s3',document.querySelectorAll('.nav-item')[3])"><div class="ov-num">03</div><div class="ov-name">Readiness Assessment</div><div class="ov-desc">Core Values, GWC & Competency calibration</div></div>
+        <div class="ov-card" onclick="go('s4',document.querySelectorAll('.nav-item')[4])"><div class="ov-num">04</div><div class="ov-name">Development Roadmap</div><div class="ov-desc">Growth Journey Map with milestones</div></div>
+        <div class="ov-card" onclick="go('s5',document.querySelectorAll('.nav-item')[5])"><div class="ov-num">05</div><div class="ov-name">Development Rocks</div><div class="ov-desc">SMART Rocks tied to PGB's EOS priorities</div></div>
+        <div class="ov-card" onclick="go('s6',document.querySelectorAll('.nav-item')[6])"><div class="ov-num">06</div><div class="ov-name">Ongoing Governance</div><div class="ov-desc">Dashboard review and quarterly cadence</div></div>
+      </div>
+    </div>
+    <div class="callout">"Today is not a performance review. It is a strategic investment in PGB's future."</div>
+    <div style="text-align:right;margin-top:24px;"><button class="btn btn-primary" onclick="go('s1',document.querySelectorAll('.nav-item')[1])">Begin Section 1 →</button></div>
+  </div>
+
+  <!-- S1: IDENTIFYING SUCCESSORS -->
+  <div class="section" id="s1">
+    <div class="sh-tag">Section 1 · 1:30 – 2:00 PM</div>
+    <div class="sh-title">Identifying Your<br><em>Next Successor</em></div>
+    <div class="sh-desc">Each leader names potential successor candidates — looking across direct reports, emerging talent, and cross-functional peers. No ratings yet. This is a nomination exercise only.</div>
+
+    <div class="callout">"If I were out of the picture tomorrow — who steps in, and how ready are they really?"</div>
+
+    <div class="card">
+      <div class="card-title">Role Being Planned For</div>
+      <div class="row2">
+        <div class="field"><label>Critical Role / Position</label><input type="text" data-key="s1_role" placeholder="e.g. Operations Manager – PSC" oninput="sync(this)"></div>
+        <div class="field"><label>Current Role Holder</label><input type="text" data-key="s1_holder" placeholder="Current person in this role" oninput="sync(this)"></div>
+      </div>
+      <div class="field"><label>Why is this role critical to PGB's continuity?</label><textarea data-key="s1_why_critical" placeholder="What breaks down if this role is vacant for 30 days?" oninput="sync(this)"></textarea></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Nominated Candidates</div>
+      <p class="helper" style="margin-bottom:14px;">Aim for 2–4 names per critical role. Every nomination needs a specific observation — not a feeling.</p>
+      <div id="s1Candidates"></div>
+      <button class="add-btn" onclick="addCandidate()">+ Add Candidate</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Talent Pool Reflection</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:12px;">
+          <div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:5px;">Direct Reports</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Who on your team is growing beyond their current role?</div>
+          <textarea data-key="s1_pool_direct" placeholder="Notes..." oninput="sync(this)" style="min-height:56px;font-size:11px;"></textarea>
+        </div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:12px;">
+          <div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:5px;">Emerging Leaders</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Who 1–2 levels down is being underestimated?</div>
+          <textarea data-key="s1_pool_emerging" placeholder="Notes..." oninput="sync(this)" style="min-height:56px;font-size:11px;"></textarea>
+        </div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:12px;">
+          <div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:5px;">Cross-Functional</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Who in another function has the strategic scope?</div>
+          <textarea data-key="s1_pool_cross" placeholder="Notes..." oninput="sync(this)" style="min-height:56px;font-size:11px;"></textarea>
+        </div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:12px;">
+          <div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:5px;">Who Might You Overlook?</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Is it a real capability gap — or comfort?</div>
+          <textarea data-key="s1_pool_overlook" placeholder="Name and honest reflection..." oninput="sync(this)" style="min-height:56px;font-size:11px;"></textarea>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:right;margin-top:20px;"><button class="btn btn-primary" onclick="go('s2',document.querySelectorAll('.nav-item')[2])">Continue to Section 2 →</button></div>
+  </div>
+
+  <!-- S2: UNDERSTANDING THE ROLE -->
+  <div class="section" id="s2">
+    <div class="sh-tag">Section 2 · 2:00 – 3:00 PM</div>
+    <div class="sh-title">Understanding the Role &amp;<br><em>Creating a Transition Plan</em></div>
+    <div class="sh-desc">Define what the role truly demands — accountabilities, excellence indicators, key relationships — then build a phased transition plan.</div>
+
+    <div class="card">
+      <div class="card-title">The 4 Essential Questions</div>
+      <div class="field">
+        <label>1. Top 3 Accountabilities — outcomes, not tasks</label>
+        <p class="helper">Verifiable, specific, time-bound. Push past "manages the team" to "delivers margin targets ≥18% quarterly."</p>
+        <div id="s2Accs"></div>
+        <button class="add-btn" onclick="addAcc()">+ Add Accountability</button>
+      </div>
+      <hr>
+      <div class="field">
+        <label>2. What does excellence look like? (Observable behaviors — not adjectives)</label>
+        <textarea data-key="s2_excellence" placeholder="What do you actually SEE? e.g. 'In team meetings, they redirect from problems to options before anyone else does. When a project is off-track, they surface it with a proposed fix within 48 hours.'" oninput="sync(this)" style="min-height:90px;"></textarea>
+      </div>
+      <hr>
+      <div class="field">
+        <label>3. Key Relationships this role must own (5 most critical)</label>
+        <p class="helper">Include upward, lateral, external. External are most often underdeveloped in a transition.</p>
+        <div id="s2Rels"></div>
+        <button class="add-btn" onclick="addRel()">+ Add Relationship</button>
+      </div>
+      <hr>
+      <div class="field">
+        <label>4. Common failure modes — Where do people struggle in this transition?</label>
+        <textarea data-key="s2_failures" placeholder="e.g. 'They underestimate relationship management demands. They revert to doing instead of leading. They struggle to make calls without checking upward.'" oninput="sync(this)" style="min-height:90px;"></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Phased Transition Plan</div>
+      <div class="phase-grid">
+        <div class="phase-box"><div class="phase-lbl">Phase 1 · Months 1–3</div><div class="phase-title">Shadow &amp; Learn</div><textarea data-key="s2_phase1" placeholder="What does the successor observe? Who narrates decisions?" oninput="sync(this)" style="min-height:76px;font-size:11px;"></textarea></div>
+        <div class="phase-box"><div class="phase-lbl">Phase 2 · Months 3–6</div><div class="phase-title">Lead with Support</div><textarea data-key="s2_phase2" placeholder="Which accountabilities does the successor own first?" oninput="sync(this)" style="min-height:76px;font-size:11px;"></textarea></div>
+        <div class="phase-box"><div class="phase-lbl">Phase 3 · Month 6+</div><div class="phase-title">Full Handover</div><textarea data-key="s2_phase3" placeholder="What is the declaration moment? How are stakeholders informed?" oninput="sync(this)" style="min-height:76px;font-size:11px;"></textarea></div>
+      </div>
+      <label>Success Measures — How we know the successor is ready</label>
+      <div class="sc-grid">
+        <div class="sc-item"><input type="checkbox"> <span>Performance in current role — 2+ consecutive cycles above expectations</span></div>
+        <div class="sc-item"><input type="checkbox"> <span>Competency Pattern — consistent behavior change, not one strong moment</span></div>
+        <div class="sc-item"><input type="checkbox"> <span>Stakeholder Confidence — peers, direct reports &amp; clients confirm genuinely</span></div>
+        <div class="sc-item"><input type="checkbox"> <span>Stretch Assignment — delivered at a high level</span></div>
+        <div class="sc-item"><input type="checkbox"> <span>Sponsor Sign-off — senior leader + 1 other confirm readiness genuinely</span></div>
+      </div>
+    </div>
+    <div style="text-align:right;margin-top:20px;"><button class="btn btn-primary" onclick="go('s3',document.querySelectorAll('.nav-item')[3])">Continue to Section 3 →</button></div>
+  </div>
+
+  <!-- S3: PA & GWC GRID -->
+  <div class="section" id="s3">
+    <div class="sh-tag">Section 3 · 3:00 – 4:00 PM</div>
+    <div class="sh-title">Values, GWC &amp;<br><em>Competency Calibration</em></div>
+    <div class="sh-desc">Rate independently first — do not share until everyone has finished. Then calibrate as a group to reach a consensus Readiness Tier for each candidate.</div>
+    <div class="callout"><strong style="color:var(--green)">+</strong> = Consistent pattern &nbsp;·&nbsp; <strong style="color:var(--amber)">+/–</strong> = Sometimes / Inconsistent &nbsp;·&nbsp; <strong style="color:var(--red)">–</strong> = Pattern of absence</div>
+    <div id="s3Cards"></div>
+    <button class="add-btn" onclick="addS3()">+ Add Candidate to Rate</button>
+    <div style="text-align:right;margin-top:20px;"><button class="btn btn-primary" onclick="go('s4',document.querySelectorAll('.nav-item')[4])">Continue to Section 4 →</button></div>
+  </div>
+
+  <!-- S4: GROWTH JOURNEY MAP -->
+  <div class="section" id="s4">
+    <div class="sh-tag">Section 4 · 4:00 – 4:30 PM</div>
+    <div class="sh-title">Growth<br><em>Journey Map</em></div>
+    <div class="sh-desc">One map per successor. Convert each Readiness Tier into a personalized development roadmap — specific competencies, a stretch assignment, milestone targets, and support needed.</div>
+    <div class="callout">Ready Soon (2/3 GWC) → 0–3 and 3–6 month bands only. &nbsp;&nbsp; Ready Later (1/3 GWC) → All four bands (0–18 months).</div>
+    <div id="s4Maps"></div>
+    <button class="add-btn" onclick="addMap()">+ Add Growth Journey Map</button>
+    <div style="text-align:right;margin-top:20px;"><button class="btn btn-primary" onclick="go('s5',document.querySelectorAll('.nav-item')[5])">Continue to Section 5 →</button></div>
+  </div>
+
+  <!-- S5: DEV ROCK PLANNER -->
+  <div class="section" id="s5">
+    <div class="sh-tag">Section 5 · 4:00 – 4:30 PM</div>
+    <div class="sh-title">Development<br><em>Rock Planner</em></div>
+    <div class="sh-desc">Convert the top 1–3 development priorities from each Growth Journey Map into SMART Rocks tied to PGB's four EOS Strategic Rocks.</div>
+    <div class="card">
+      <div class="card-title">PGB's 4 EOS Strategic Rocks</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:10px;text-align:center;"><span class="rt rt-s">Succession Plan in Place</span></div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:10px;text-align:center;"><span class="rt rt-c">Stronger Cash Position</span></div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:10px;text-align:center;"><span class="rt rt-p">Productivity &amp; Process Efficiencies</span></div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:10px;text-align:center;"><span class="rt rt-j">Stronger Partnerships &amp; JVs</span></div>
+      </div>
+    </div>
+    <div class="callout"><strong>WEAK:</strong> "Improve communication skills." — No output, no KPI, no date.<br><strong>STRONG:</strong> "Facilitate monthly all-hands for 3 months. Collect feedback from 5+ direct reports each time. Share summary with HR by end of Q2."</div>
+    <div id="s5Rocks"></div>
+    <button class="add-btn" onclick="addRock()">+ Add Development Rock</button>
+    <div style="text-align:right;margin-top:20px;"><button class="btn btn-primary" onclick="go('s6',document.querySelectorAll('.nav-item')[6])">Continue to Section 6 →</button></div>
+  </div>
+
+  <!-- S6: DASHBOARD -->
+  <div class="section" id="s6">
+    <div class="sh-tag">Section 6 · 4:30 – 4:45 PM</div>
+    <div class="sh-title">Succession Dashboard<br><em>&amp; Governance</em></div>
+    <div class="sh-desc">The plan lives only if it has an owner, a cadence, and a next review date. Populate the live Dashboard together and agree on all four governance items before you leave.</div>
+
+    <div class="bench">
+      <div class="bc now"><div class="bc-num" id="bNow">0</div><div class="bc-lbl">Ready Now</div></div>
+      <div class="bc soon"><div class="bc-num" id="bSoon">0</div><div class="bc-lbl">Ready Soon</div></div>
+      <div class="bc later"><div class="bc-num" id="bLater">0</div><div class="bc-lbl">Ready Later</div></div>
+      <div class="bc unr"><div class="bc-num" id="bUnr">0</div><div class="bc-lbl">Unready</div></div>
+    </div>
+
+    <div class="card" style="overflow-x:auto;">
+      <div class="card-title">Live Succession Dashboard</div>
+      <table class="dt">
+        <thead><tr><th>Successor</th><th>Current Role</th><th>Target Role</th><th>Tier</th><th>Current Rock</th><th>Mentor</th><th>Next Milestone</th><th>Date</th><th>Blockers</th><th></th></tr></thead>
+        <tbody id="dashBody"></tbody>
+      </table>
+      <button class="add-btn" onclick="addDash()" style="margin-top:10px;">+ Add Successor Row</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Governance Cadence</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:13px;">
+          <div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:3px;">Weekly</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Manager &amp; successor 1:1 — Rock progress, blockers, feedback</div>
+          <textarea data-key="gov_weekly" placeholder="Who owns the weekly 1:1 per successor?" oninput="sync(this)" style="min-height:56px;font-size:11px;"></textarea>
+        </div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:13px;">
+          <div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:3px;">First Quarterly Review</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Name a specific date — not a quarter</div>
+          <input type="text" data-key="gov_quarterly" placeholder="e.g. July 10, 2025" oninput="sync(this)">
+        </div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:13px;">
+          <div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:3px;">Annual Workshop</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Repeat full workshop — new nominations, calibration, maps</div>
+          <input type="text" data-key="gov_annual" placeholder="e.g. Q1 next year — pin the date" oninput="sync(this)">
+        </div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:13px;">
+          <div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:3px;">Escalation Path</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">1:1 → HR → Integrator → GM if stuck 2+ quarters</div>
+          <input type="text" data-key="gov_escalation" placeholder="Confirm the escalation chain" oninput="sync(this)">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Before You Leave — Group Exit Criteria</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="sc-item" style="font-size:13px;"><input type="checkbox"> <strong>Dashboard Owner named and first quarterly review date in the calendar</strong></div>
+        <div class="sc-item" style="font-size:13px;"><input type="checkbox"> <strong>Every successor has a named manager, mentor, and at least one Rock</strong></div>
+        <div class="sc-item" style="font-size:13px;"><input type="checkbox"> <strong>Each leader knows the one conversation they are having in the next 7 days</strong></div>
+        <div class="sc-item" style="font-size:13px;"><input type="checkbox"> <strong>This workbook is saved and the Dashboard Owner has access</strong></div>
+      </div>
+      <hr>
+      <div class="field" style="margin-top:12px;">
+        <label>My Commitment — The one thing I will do in the next 7 days</label>
+        <textarea data-key="commitment" placeholder="Be specific. Name names. Name dates." oninput="sync(this)" style="min-height:68px;"></textarea>
+        <div class="contrib-row" id="commitContribs"></div>
+      </div>
+    </div>
+
+    <div class="callout" style="text-align:center;font-size:13px;padding:16px 24px;">"A succession plan lives in the conversations that happen after today — in the feedback given, the stretch opportunity offered, and the honest conversation that replaces comfortable silence."</div>
+    <div style="text-align:center;margin-top:24px;"><button class="btn btn-primary" onclick="window.print()">Export Workbook as PDF</button></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let ME = { name:'', role:'', bu:'' };
+let SESSION_KEY = 'pgb_succession_session_v2';
+let POLL_INTERVAL = 4000;
+let pollTimer = null;
+let lastData = {};
+let s1CandCount = 0, s2AccCount = 0, s2RelCount = 0;
+let s3Count = 0, s4Count = 0, s5Count = 0, s6Count = 0;
+
+// ══════════════════════════════════════════
+// JOIN
+// ══════════════════════════════════════════
+function joinSession() {
+  const name = document.getElementById('joinName').value.trim();
+  const role = document.getElementById('joinRole').value.trim();
+  const bu   = document.getElementById('joinBU').value;
+  if (!name || !role || !bu) { alert('Please fill in all fields to continue.'); return; }
+  ME = { name, role, bu, initials: name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2), joined: Date.now() };
+  document.getElementById('joinScreen').style.display = 'none';
+  document.getElementById('topBar').style.display = 'flex';
+  document.getElementById('sidebar').style.display = 'flex';
+  document.getElementById('main').style.display = 'block';
+  init();
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+async function init() {
+  // pre-populate some entries
+  addCandidate(); addAcc(); addAcc(); addAcc(); addRel(); addRel(); addRel();
+  addS3(); addMap(); addRock(); addDash();
+  // load from storage
+  await loadAll();
+  // register presence
+  await registerPresence();
+  // start polling
+  pollTimer = setInterval(pollUpdates, POLL_INTERVAL);
+  updateBench();
+}
+
+// ══════════════════════════════════════════
+// SHARED STORAGE via window.storage
+// ══════════════════════════════════════════
+async function storageSet(key, value) {
+  try { await window.storage.set(key, JSON.stringify(value), true); } catch(e) { console.warn('storage set err', key, e); }
+}
+async function storageGet(key) {
+  try {
+    const r = await window.storage.get(key, true);
+    return r ? JSON.parse(r.value) : null;
+  } catch(e) { return null; }
+}
+async function storageDel(key) {
+  try { await window.storage.delete(key, true); } catch(e) {}
+}
+async function storageList(prefix) {
+  try {
+    const r = await window.storage.list(prefix, true);
+    return r ? r.keys : [];
+  } catch(e) { return []; }
+}
+
+// ══════════════════════════════════════════
+// PRESENCE
+// ══════════════════════════════════════════
+async function registerPresence() {
+  const pk = 'presence:' + ME.name.replace(/\s+/g,'_');
+  await storageSet(pk, { name: ME.name, role: ME.role, bu: ME.bu, initials: ME.initials, ts: Date.now() });
+  setInterval(async () => { await storageSet(pk, { name:ME.name, role:ME.role, bu:ME.bu, initials:ME.initials, ts:Date.now() }); }, 30000);
+  await refreshPresence();
+}
+
+async function refreshPresence() {
+  const keys = await storageList('presence:');
+  const now = Date.now();
+  const users = [];
+  for (const k of keys) {
+    const u = await storageGet(k);
+    if (u && (now - u.ts) < 120000) users.push(u);
+  }
+  renderPresence(users);
+}
+
+function renderPresence(users) {
+  const tbUsers = document.getElementById('tbUsers');
+  tbUsers.innerHTML = '';
+  users.slice(0, 6).forEach(u => {
+    const av = document.createElement('div');
+    av.className = 'tb-avatar';
+    av.title = u.name + ' · ' + u.role;
+    av.textContent = u.initials || '??';
+    if (u.name === ME.name) av.style.borderColor = 'var(--gold)';
+    tbUsers.appendChild(av);
+  });
+  if (users.length > 6) {
+    const more = document.createElement('div');
+    more.style.cssText = 'font-size:10px;color:var(--muted);';
+    more.textContent = '+' + (users.length - 6);
+    tbUsers.appendChild(more);
+  }
+  const whoList = document.getElementById('whoList');
+  whoList.innerHTML = '';
+  users.forEach(u => {
+    const row = document.createElement('div');
+    row.className = 'who-row';
+    row.innerHTML = `<div class="who-dot"></div><span class="${u.name===ME.name?'who-you':''}">${u.name}${u.name===ME.name?' (you)':''}</span>`;
+    whoList.appendChild(row);
+  });
+}
+
+// ══════════════════════════════════════════
+// SYNC — write field change to shared storage
+// ══════════════════════════════════════════
+let syncQueue = {};
+let syncTimer = null;
+
+function sync(el) {
+  const key = el.dataset.key;
+  if (!key) return;
+  setSyncDot('syncing');
+  syncQueue[key] = { value: el.value, by: ME.name, ts: Date.now() };
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(flushSync, 600);
+  updateProgress();
+}
+
+async function flushSync() {
+  const q = { ...syncQueue };
+  syncQueue = {};
+  for (const [key, data] of Object.entries(q)) {
+    await storageSet('field:' + key, data);
+    lastData['field:' + key] = data;
+  }
+  setSyncDot('synced');
+  setTimeout(() => setSyncDot('live'), 2000);
+}
+
+function setSyncDot(state) {
+  const dot = document.getElementById('syncDot');
+  const lbl = document.getElementById('syncLabel');
+  dot.className = 'sync-dot ' + (state === 'syncing' ? 'syncing' : state === 'synced' ? 'synced' : '');
+  lbl.textContent = state === 'syncing' ? 'Saving…' : state === 'synced' ? 'Saved' : 'Live';
+}
+
+// ══════════════════════════════════════════
+// POLL — read updates from other users
+// ══════════════════════════════════════════
+async function pollUpdates() {
+  await refreshPresence();
+  const keys = await storageList('field:');
+  for (const k of keys) {
+    const data = await storageGet(k);
+    if (!data) continue;
+    const fieldKey = k.replace('field:', '');
+    // skip if same as last known or written by me recently
+    if (lastData[k] && lastData[k].ts === data.ts) continue;
+    lastData[k] = data;
+    if (data.by !== ME.name) {
+      // update DOM
+      const el = document.querySelector(`[data-key="${fieldKey}"]`);
+      if (el && document.activeElement !== el) {
+        el.value = data.value;
+        flashField(el, data.by);
+      }
+    }
+  }
+  // poll rating buttons
+  const rkeys = await storageList('rating:');
+  for (const k of rkeys) {
+    const data = await storageGet(k);
+    if (!data) continue;
+    if (lastData[k] && lastData[k].ts === data.ts) continue;
+    lastData[k] = data;
+    if (data.by !== ME.name) {
+      const btn = document.querySelector(`[data-rating-key="${k.replace('rating:','')}"][data-val="${data.value}"]`);
+      if (btn) applyRatingBtn(btn, data.value, false);
+    }
+  }
+  // poll tier selections
+  const tkeys = await storageList('tier:');
+  for (const k of tkeys) {
+    const data = await storageGet(k);
+    if (!data) continue;
+    if (lastData[k] && lastData[k].ts === data.ts) continue;
+    lastData[k] = data;
+    if (data.by !== ME.name) {
+      const card = document.querySelector(`[data-tier-key="${k.replace('tier:','')}"][data-tier="${data.value}"]`);
+      if (card) applyTier(card, data.value, false);
+    }
+  }
+  updateBench();
+}
+
+function flashField(el, byName) {
+  el.style.borderColor = 'rgba(196,135,42,0.6)';
+  el.style.boxShadow = '0 0 0 3px rgba(196,135,42,0.08)';
+  setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 1400);
+}
+
+// ══════════════════════════════════════════
+// LOAD ALL
+// ══════════════════════════════════════════
+async function loadAll() {
+  const keys = await storageList('field:');
+  for (const k of keys) {
+    const data = await storageGet(k);
+    if (!data) continue;
+    lastData[k] = data;
+    const fieldKey = k.replace('field:', '');
+    const el = document.querySelector(`[data-key="${fieldKey}"]`);
+    if (el) el.value = data.value;
+  }
+  // ratings
+  const rkeys = await storageList('rating:');
+  for (const k of rkeys) {
+    const data = await storageGet(k);
+    if (!data) continue;
+    lastData[k] = data;
+    const btn = document.querySelector(`[data-rating-key="${k.replace('rating:','')}"][data-val="${data.value}"]`);
+    if (btn) applyRatingBtn(btn, data.value, false);
+  }
+  // tiers
+  const tkeys = await storageList('tier:');
+  for (const k of tkeys) {
+    const data = await storageGet(k);
+    if (!data) continue;
+    lastData[k] = data;
+    const card = document.querySelector(`[data-tier-key="${k.replace('tier:','')}"][data-tier="${data.value}"]`);
+    if (card) applyTier(card, data.value, false);
+  }
+  updateBench();
+}
+
+// ══════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════
+const sectionTitles = { s0:'Overview', s1:'Section 1 — Identifying Successors', s2:'Section 2 — Understanding the Role', s3:'Section 3 — PA & GWC Calibration', s4:'Section 4 — Growth Journey Map', s5:'Section 5 — Dev Rock Planner', s6:'Section 6 — Dashboard & Governance' };
+function go(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (el) el.classList.add('active');
+  document.getElementById('tbTitle').textContent = sectionTitles[id] || '';
+  window.scrollTo(0, 0);
+  updateProgress();
+}
+
+function updateProgress() {
+  let total = 0, done = 0;
+  document.querySelectorAll('input[type="text"][data-key], textarea[data-key]').forEach(el => {
+    total++; if (el.value.trim()) done++;
+  });
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  document.getElementById('navProgFill').style.width = pct + '%';
+}
+
+// ══════════════════════════════════════════
+// SECTION 1 — CANDIDATES
+// ══════════════════════════════════════════
+function addCandidate() {
+  s1CandCount++;
+  const c = s1CandCount;
+  const div = document.createElement('div');
+  div.className = 'entry'; div.id = 'cand' + c;
+  div.innerHTML = `<div class="entry-n">${String(c).padStart(2,'0')}</div>
+    <div class="row2" style="padding-right:40px;">
+      <div class="field"><label>Candidate Name</label><input type="text" data-key="s1_cand${c}_name" placeholder="Full name" oninput="sync(this)"></div>
+      <div class="field"><label>Current Role</label><input type="text" data-key="s1_cand${c}_role" placeholder="Current position" oninput="sync(this)"></div>
+      <div class="field"><label>Target / Succession Role</label><input type="text" data-key="s1_cand${c}_target" placeholder="Role being considered for" oninput="sync(this)"></div>
+      <div class="field"><label>Nominated By</label><input type="text" data-key="s1_cand${c}_by" placeholder="Nominating leader" oninput="sync(this)"></div>
+    </div>
+    <div class="field"><label>Why Nominated — Specific Observation</label><textarea data-key="s1_cand${c}_why" placeholder="What specific behavior, result, or pattern makes this person a candidate?" oninput="sync(this)"></textarea></div>
+    <div style="margin-top:10px;"><button class="btn btn-del btn-sm" onclick="removeEntry('cand${c}')">Remove</button></div>`;
+  document.getElementById('s1Candidates').appendChild(div);
+}
+
+// ══════════════════════════════════════════
+// SECTION 2 — ACCOUNTABILITIES & RELATIONS
+// ══════════════════════════════════════════
+function addAcc() {
+  s2AccCount++;
+  const c = s2AccCount;
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;';
+  div.innerHTML = `<span style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold-dim);padding-top:10px;min-width:18px;">${c}.</span>
+    <input type="text" data-key="s2_acc${c}" placeholder="Outcome-based accountability with a number and timeframe" oninput="sync(this)" style="flex:1;">
+    <button class="btn btn-del btn-sm" style="margin-top:2px;" onclick="this.parentElement.remove()">×</button>`;
+  document.getElementById('s2Accs').appendChild(div);
+}
+function addRel() {
+  s2RelCount++;
+  const c = s2RelCount;
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;';
+  div.innerHTML = `<span style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold-dim);padding-top:10px;min-width:18px;">${c}.</span>
+    <input type="text" data-key="s2_rel${c}" placeholder="e.g. DOLE Regional Office — compliance relationship, owned directly" oninput="sync(this)" style="flex:1;">
+    <button class="btn btn-del btn-sm" style="margin-top:2px;" onclick="this.parentElement.remove()">×</button>`;
+  document.getElementById('s2Rels').appendChild(div);
+}
+
+// ══════════════════════════════════════════
+// SECTION 3 — RATINGS
+// ══════════════════════════════════════════
+function addS3() {
+  s3Count++;
+  const c = s3Count;
+  const comps = ['Job Knowledge & Skills','Decision Making & Problem Solving','Communication','Planning & Organizing','Leadership','Customer Focus'];
+  const div = document.createElement('div');
+  div.className = 'card'; div.id = 's3c' + c;
+  div.innerHTML = `
+    <div class="card-title">Candidate ${c}</div>
+    <div class="row2" style="margin-bottom:14px;">
+      <div class="field"><label>Candidate Name</label><input type="text" data-key="s3_c${c}_name" placeholder="Name" oninput="sync(this)"></div>
+      <div class="field"><label>Target Role</label><input type="text" data-key="s3_c${c}_target" placeholder="Role being assessed for" oninput="sync(this)"></div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);letter-spacing:.12em;margin-bottom:10px;text-transform:uppercase;">Core Values — All 3 must score "+" to qualify</div>
+      ${[['Pagsalig','Build on trust — Does what they say. Trustworthy under pressure.'],['Hini-usang Pagkugi','We keep going together — Works toward team goals, pulls in PGB\'s direction.'],['Pagpalambo','We strive to make things better — Grows without being asked. Brings solutions.']].map((v,i) => `
+      <div class="vr">
+        <div><div class="vn">${v[0]}</div><div class="vs">${v[1]}</div></div>
+        <div class="rg">${ratingBtns('s3_c'+c+'_cv'+i)}</div>
+      </div>`).join('')}
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);letter-spacing:.12em;margin-bottom:8px;text-transform:uppercase;">GWC — Minimum 1 of 3 to qualify</div>
+      <div class="gwc-g">
+        ${[['Gets It','Truly understands the role — complexity, culture, pace, expectations.'],['Wants It','Genuinely wants the responsibility — not just the title or the pay.'],['Capacity','Has the time, bandwidth, emotional maturity, and skill to perform.']].map((g,i) => `
+        <div class="gwci">
+          <div class="gwc-lbl">${g[0]}</div><div class="gwc-desc">${g[1]}</div>
+          <div class="rg">${ratingBtns('s3_c'+c+'_gwc'+i)}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);letter-spacing:.12em;margin-bottom:8px;text-transform:uppercase;">Competency Assessment</div>
+      <div class="comp-g">
+        ${comps.map((name,i) => `
+        <div class="comp-r">
+          <span class="comp-num">0${i+1}</span>
+          <span class="comp-n">${name}</span>
+          <div class="rg">${ratingBtns('s3_c'+c+'_comp'+i)}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div>
+      <label>Consensus Readiness Tier</label>
+      <div class="tier-grid">
+        ${tierCard(c,'now','Ready Now','3/3 CV · 3/3 GWC · 6/6 CA','var(--green)')}
+        ${tierCard(c,'soon','Ready Soon','3/3 CV · 2/3 GWC · 4+/6 CA','var(--blue)')}
+        ${tierCard(c,'later','Ready Later','3/3 CV · 1/3 GWC · 3+/6 CA','var(--amber)')}
+        ${tierCard(c,'unready','Unready','Fails CV · 0/3 GWC · 1(–)/6 CA','var(--red)')}
+      </div>
+    </div>
+    <div class="field" style="margin-top:10px;">
+      <label>Development Focus — Key gaps surfaced by calibration</label>
+      <textarea data-key="s3_c${c}_devfocus" placeholder="Top 2–3 development priorities based on the ratings above." oninput="sync(this)"></textarea>
+    </div>
+    <div style="margin-top:10px;"><button class="btn btn-del btn-sm" onclick="removeEntry('s3c${c}')">Remove Candidate</button></div>`;
+  document.getElementById('s3Cards').appendChild(div);
+}
+
+function ratingBtns(key) {
+  return `<button class="rb" data-rating-key="${key}" data-val="plus"  onclick="setRating(this,'plus')" >+</button>
+          <button class="rb" data-rating-key="${key}" data-val="mixed" onclick="setRating(this,'mixed')">+/–</button>
+          <button class="rb" data-rating-key="${key}" data-val="minus" onclick="setRating(this,'minus')">–</button>`;
+}
+
+function tierCard(c, tier, label, crit, color) {
+  return `<div class="tc" data-tier-key="s3_c${c}_tier" data-tier="${tier}" onclick="setTier(this,'${tier}')">
+    <div class="tc-lbl" style="color:${color};">${label}</div>
+    <div class="tc-cr">${crit}</div>
+  </div>`;
+}
+
+async function setRating(btn, val) {
+  applyRatingBtn(btn, val, true);
+  const key = btn.dataset.ratingKey;
+  await storageSet('rating:' + key, { value: val, by: ME.name, ts: Date.now() });
+  lastData['rating:' + key] = { value: val, by: ME.name, ts: Date.now() };
+}
+
+function applyRatingBtn(btn, val) {
+  const group = btn.closest('.rg');
+  group.querySelectorAll('.rb').forEach(b => b.className = 'rb');
+  btn.classList.add(val === 'plus' ? 'rp' : val === 'mixed' ? 'rm' : 'rn');
+}
+
+async function setTier(card, tier) {
+  applyTier(card, tier, true);
+  const key = card.dataset.tierKey;
+  await storageSet('tier:' + key, { value: tier, by: ME.name, ts: Date.now() });
+  lastData['tier:' + key] = { value: tier, by: ME.name, ts: Date.now() };
+  updateBench();
+}
+
+function applyTier(card, tier) {
+  card.closest('.tier-grid').querySelectorAll('.tc').forEach(c => c.classList.remove('sel'));
+  card.classList.add('sel');
+  updateBench();
+}
+
+function updateBench() {
+  const counts = { now: 0, soon: 0, later: 0, unready: 0 };
+  document.querySelectorAll('.tc.sel').forEach(card => {
+    const t = card.dataset.tier;
+    if (counts[t] !== undefined) counts[t]++;
+  });
+  document.getElementById('bNow').textContent = counts.now;
+  document.getElementById('bSoon').textContent = counts.soon;
+  document.getElementById('bLater').textContent = counts.later;
+  document.getElementById('bUnr').textContent = counts.unready;
+}
+
+// ══════════════════════════════════════════
+// SECTION 4 — GROWTH MAPS
+// ══════════════════════════════════════════
+function addMap() {
+  s4Count++;
+  const c = s4Count;
+  const div = document.createElement('div');
+  div.className = 'card'; div.id = 'map' + c;
+  div.innerHTML = `
+    <div class="card-title">Growth Journey Map — Successor ${c}</div>
+    <div class="row2" style="margin-bottom:14px;">
+      <div class="field"><label>Successor Name</label><input type="text" data-key="s4_m${c}_name" placeholder="Name" oninput="sync(this)"></div>
+      <div class="field"><label>Readiness Tier</label><select data-key="s4_m${c}_tier" onchange="sync(this)"><option value="">Select tier</option><option>Ready Now</option><option>Ready Soon</option><option>Ready Later</option></select></div>
+    </div>
+    <div class="field">
+      <label>1. Competency Focus (max 3 — current level → target level)</label>
+      <p class="helper">T = Technical · NT = Non-Technical. Name HOW they develop it — not just that they will.</p>
+      <textarea data-key="s4_m${c}_comp" placeholder="e.g. Leadership (NT) — Current: 2 → Target: 4. Method: Lead cross-functional team for Q3 process review; structured 360 feedback quarterly." oninput="sync(this)" style="min-height:86px;"></textarea>
+    </div>
+    <div class="field">
+      <label>2. Stretch Assignment</label>
+      <p class="helper">Real work — not a training program. Specific deliverable, scope, and deadline.</p>
+      <textarea data-key="s4_m${c}_stretch" placeholder="STRONG: 'Lead the Q3 cross-SBU process efficiency review end-to-end — present findings and a recommendation to the leadership team by September 30.'" oninput="sync(this)" style="min-height:76px;"></textarea>
+    </div>
+    <div class="field">
+      <label>3. Milestone Targets</label>
+      <div class="ms-track">
+        <div class="ms-band"><div class="ms-lbl">0–3 Months</div><textarea data-key="s4_m${c}_ms1" placeholder="Verifiable outcome by month 3?" oninput="sync(this)" style="min-height:68px;font-size:11px;"></textarea></div>
+        <div class="ms-band"><div class="ms-lbl">3–6 Months</div><textarea data-key="s4_m${c}_ms2" placeholder="Verifiable outcome by month 6?" oninput="sync(this)" style="min-height:68px;font-size:11px;"></textarea></div>
+        <div class="ms-band"><div class="ms-lbl">6–12 Months</div><textarea data-key="s4_m${c}_ms3" placeholder="Ready Later only." oninput="sync(this)" style="min-height:68px;font-size:11px;"></textarea></div>
+        <div class="ms-band"><div class="ms-lbl">12–18 Months</div><textarea data-key="s4_m${c}_ms4" placeholder="Ready Later only." oninput="sync(this)" style="min-height:68px;font-size:11px;"></textarea></div>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>4. Support Needed</label>
+        <p class="helper">Named mentor. Specific training. Leadership time commitment. Barriers to remove.</p>
+        <textarea data-key="s4_m${c}_support" placeholder="Mentor: [Name]&#10;Training: [Program]&#10;Leadership time: [Type & frequency]&#10;Barrier to remove: [Specific]" oninput="sync(this)" style="min-height:86px;"></textarea>
+      </div>
+      <div class="field">
+        <label>5. Readiness Milestone</label>
+        <p class="helper">Single observable criteria. Must be verifiable — not a feeling.</p>
+        <textarea data-key="s4_m${c}_readiness" placeholder="e.g. Has independently led a cross-functional project to completion, received written confirmation of stakeholder confidence from ≥3 peers, and presented outcomes to GM." oninput="sync(this)" style="min-height:86px;"></textarea>
+      </div>
+    </div>
+    <div style="margin-top:10px;"><button class="btn btn-del btn-sm" onclick="removeEntry('map${c}')">Remove Map</button></div>`;
+  document.getElementById('s4Maps').appendChild(div);
+}
+
+// ══════════════════════════════════════════
+// SECTION 5 — DEV ROCKS
+// ══════════════════════════════════════════
+function addRock() {
+  s5Count++;
+  const c = s5Count;
+  const div = document.createElement('div');
+  div.className = 'entry'; div.id = 'rock' + c;
+  div.innerHTML = `<div class="entry-n">${String(c).padStart(2,'0')}</div>
+    <div class="row2" style="padding-right:44px;">
+      <div class="field"><label>Successor This Rock Serves</label><input type="text" data-key="s5_r${c}_successor" placeholder="Name" oninput="sync(this)"></div>
+      <div class="field"><label>Links to EOS Rock</label>
+        <select data-key="s5_r${c}_eos" onchange="sync(this)">
+          <option value="">Select PGB Strategic Rock</option>
+          <option>Succession Plan in Place</option>
+          <option>Stronger Cash Position</option>
+          <option>Productivity &amp; Process Efficiencies</option>
+          <option>Stronger Partnerships &amp; JVs</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Development Rock Statement (SMART)</label>
+      <textarea data-key="s5_r${c}_statement" placeholder="Write the complete SMART Rock statement here…" oninput="sync(this)"></textarea>
+    </div>
+    <div class="row3">
+      <div class="field"><label>KPI / Measurable Outcome</label><input type="text" data-key="s5_r${c}_kpi" placeholder="e.g. 3 feedback reports submitted" oninput="sync(this)"></div>
+      <div class="field"><label>Due Date (specific)</label><input type="text" data-key="s5_r${c}_date" placeholder="e.g. June 30, 2025" oninput="sync(this)"></div>
+      <div class="field"><label>Rock Owner (must be successor)</label><input type="text" data-key="s5_r${c}_owner" placeholder="Successor's name" oninput="sync(this)"></div>
+    </div>
+    <div style="margin-top:10px;"><button class="btn btn-del btn-sm" onclick="removeEntry('rock${c}')">Remove Rock</button></div>`;
+  document.getElementById('s5Rocks').appendChild(div);
+}
+
+// ══════════════════════════════════════════
+// SECTION 6 — DASHBOARD TABLE
+// ══════════════════════════════════════════
+function addDash() {
+  s6Count++;
+  const c = s6Count;
+  const tr = document.createElement('tr');
+  tr.id = 'dr' + c;
+  tr.innerHTML = `
+    <td><input type="text" data-key="s6_d${c}_name" placeholder="Name" oninput="sync(this)"></td>
+    <td><input type="text" data-key="s6_d${c}_cur" placeholder="Current role" oninput="sync(this)"></td>
+    <td><input type="text" data-key="s6_d${c}_tgt" placeholder="Target role" oninput="sync(this)"></td>
+    <td><select data-key="s6_d${c}_tier" onchange="sync(this);updateBench();">
+      <option value="">—</option><option>Ready Now</option><option>Ready Soon</option><option>Ready Later</option><option>Unready</option>
+    </select></td>
+    <td><input type="text" data-key="s6_d${c}_rock" placeholder="Rock (brief)" oninput="sync(this)"></td>
+    <td><input type="text" data-key="s6_d${c}_mentor" placeholder="Mentor" oninput="sync(this)"></td>
+    <td><input type="text" data-key="s6_d${c}_ms" placeholder="Next milestone" oninput="sync(this)"></td>
+    <td><input type="text" data-key="s6_d${c}_date" placeholder="Date" oninput="sync(this)"></td>
+    <td><input type="text" data-key="s6_d${c}_blocker" placeholder="Blocker" oninput="sync(this)"></td>
+    <td><button class="btn btn-del btn-sm" onclick="removeEntry('dr${c}')">×</button></td>`;
+  document.getElementById('dashBody').appendChild(tr);
+}
+
+// ══════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════
+function removeEntry(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+  updateBench();
+}
+</script>
+</body>
+</html>
