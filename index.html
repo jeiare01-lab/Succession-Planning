@@ -3,41 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PGB Succession Planning — Collaborative Workbook</title>
+<title>PGB Succession Planning — Workbook</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --gold:#C9A84C;--gold-light:#E8C96A;--gold-dim:#7A6428;
-    --bg:#0C0C0A;--bg-card:#131310;--bg-panel:#181814;--bg-input:#0E0E0B;
-    --text:#EDE5CC;--muted:#7A7060;--dim:#4A4840;
-    --border:rgba(201,168,76,0.16);--border-hi:rgba(201,168,76,0.5);
-    --green:#5B9870;--amber:#C4872A;--blue:#4878A0;--red:#B84848;
-  }
+  :root{--gold:#C9A84C;--gold-light:#E8C96A;--gold-dim:#7A6428;--bg:#0C0C0A;--bg-card:#131310;--bg-panel:#181814;--bg-input:#0E0E0B;--text:#EDE5CC;--muted:#7A7060;--dim:#4A4840;--border:rgba(201,168,76,0.16);--border-hi:rgba(201,168,76,0.5);--green:#5B9870;--amber:#C4872A;--blue:#4878A0;--red:#B84848;}
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
   body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.5;}
 
   /* JOIN */
   #joinScreen{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;}
-  .join-box{width:420px;padding:48px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;text-align:center;}
+  .join-box{width:440px;padding:48px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;text-align:center;}
   .join-logo{font-family:'Cinzel',serif;font-size:36px;color:var(--gold);letter-spacing:.1em;margin-bottom:4px;}
   .join-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--muted);margin-bottom:32px;}
   .join-box label{text-align:left;display:block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
   .join-box input,.join-box select{width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:3px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:11px 14px;outline:none;transition:border-color .2s;margin-bottom:16px;}
   .join-box input:focus,.join-box select:focus{border-color:var(--border-hi);}
-  .join-btn{width:100%;padding:13px;background:var(--gold);color:#0C0C0A;border:none;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:4px;}
+  .join-btn{width:100%;padding:13px;background:var(--gold);color:#0C0C0A;border:none;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
   .join-btn:hover{background:var(--gold-light);}
-  .join-divider{width:40px;height:1px;background:var(--border);margin:24px auto;}
-  .session-info{font-size:11px;color:var(--dim);}
+  .join-note{font-size:11px;color:var(--dim);margin-top:20px;line-height:1.6;}
+  .join-privacy{display:flex;align-items:center;gap:8px;background:rgba(201,168,76,.06);border:1px solid var(--border);border-radius:3px;padding:10px 14px;margin-top:16px;font-size:11px;color:var(--muted);text-align:left;}
+  .join-privacy-icon{font-size:16px;flex-shrink:0;}
 
   /* TOPBAR */
   #topBar{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;background:rgba(12,12,10,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;}
   .tb-logo{font-family:'Cinzel',serif;font-size:15px;color:var(--gold);letter-spacing:.1em;}
   .tb-sep{width:1px;height:18px;background:var(--border);}
   .tb-title{font-size:11px;color:var(--muted);letter-spacing:.05em;flex:1;}
-  .tb-users{display:flex;align-items:center;gap:5px;}
-  .tb-av{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);background:var(--bg-panel);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--gold);position:relative;}
-  .tb-av::after{content:'';position:absolute;bottom:-1px;right:-1px;width:7px;height:7px;border-radius:50%;background:var(--green);border:1.5px solid var(--bg);}
+  .tb-user{font-size:11px;color:var(--text);font-weight:600;}
+  .tb-sbu{font-size:10px;color:var(--gold-dim);margin-left:6px;}
   .sync-dot{width:7px;height:7px;border-radius:50%;background:var(--dim);transition:background .3s;}
   .sync-dot.syncing{background:var(--amber);animation:pulse .8s infinite;}
   .sync-dot.synced{background:var(--green);}
@@ -55,11 +49,12 @@
   .nav-item.active .nav-num{color:var(--gold-dim);}
   .nav-prog{height:2px;background:var(--bg-panel);margin:0 20px 4px;}
   .nav-prog-fill{height:100%;background:var(--gold-dim);border-radius:1px;transition:width .4s;}
-  .sidebar-who{padding:14px 20px;border-top:1px solid var(--border);}
-  .who-label{font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}
-  .who-row{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);margin-bottom:5px;}
-  .who-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}
-  .who-you{color:var(--gold);font-weight:600;}
+  .sidebar-me{padding:14px 20px;border-top:1px solid var(--border);}
+  .me-label{font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
+  .me-name{font-size:13px;font-weight:600;color:var(--gold);}
+  .me-role{font-size:11px;color:var(--muted);margin-top:2px;}
+  .me-sbu{font-size:10px;color:var(--gold-dim);margin-top:2px;}
+  .private-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;padding:2px 7px;border-radius:2px;background:rgba(91,152,112,.12);border:1px solid rgba(91,152,112,.3);color:var(--green);margin-top:6px;}
 
   /* MAIN */
   #main{margin-left:210px;padding-top:52px;min-height:100vh;}
@@ -90,9 +85,6 @@
   .helper{font-size:11px;color:var(--dim);font-style:italic;margin-top:4px;}
   .callout{background:rgba(201,168,76,.05);border-left:3px solid var(--gold-dim);padding:11px 16px;border-radius:0 3px 3px 0;font-size:12px;color:var(--muted);margin:12px 0;font-style:italic;}
   hr{border:none;border-top:1px solid var(--border);margin:18px 0;}
-
-  /* FLASH */
-  .remote-flash{border-color:rgba(196,135,42,.6)!important;box-shadow:0 0 0 3px rgba(196,135,42,.08)!important;transition:all .3s;}
 
   /* RATINGS */
   .rg{display:flex;gap:5px;}
@@ -151,18 +143,10 @@
   .ms-band{background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:11px;}
   .ms-lbl{font-family:'Cinzel',serif;font-size:9px;color:var(--gold-dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px;}
 
-  /* SUCCESS CHECKS */
+  /* SC */
   .sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px;}
   .sc-item{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--muted);}
   .sc-item input[type="checkbox"]{width:auto;margin-top:2px;accent-color:var(--gold);cursor:pointer;}
-
-  /* OV GRID */
-  .ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-  .ov-card{background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:14px;cursor:pointer;transition:all .2s;}
-  .ov-card:hover{border-color:var(--gold-dim);transform:translateY(-2px);}
-  .ov-num{font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);letter-spacing:.15em;margin-bottom:5px;}
-  .ov-name{font-weight:600;font-size:13px;margin-bottom:3px;}
-  .ov-desc{font-size:11px;color:var(--muted);}
 
   /* ROCK TAGS */
   .rt{display:inline-block;padding:2px 9px;border-radius:2px;font-size:10px;font-weight:600;letter-spacing:.06em;}
@@ -189,9 +173,6 @@
   .dt{width:100%;border-collapse:collapse;font-size:12px;}
   .dt th{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;color:var(--gold-dim);text-transform:uppercase;padding:9px 10px;text-align:left;border-bottom:1px solid var(--border);font-weight:400;}
   .dt td{padding:8px 10px;border-bottom:1px solid rgba(201,168,76,.05);vertical-align:middle;}
-  .dt tr:last-child td{border-bottom:none;}
-  .dt input{padding:6px 8px;font-size:12px;}
-  .dt select{padding:5px 7px;font-size:11px;}
 
   ::-webkit-scrollbar{width:4px;}
   ::-webkit-scrollbar-track{background:var(--bg);}
@@ -205,16 +186,9 @@
   <div class="join-box">
     <div class="join-logo">PGB</div>
     <div class="join-sub">Succession Planning Workshop</div>
-    <div class="field">
-      <label>Your Full Name</label>
-      <input type="text" id="joinName" placeholder="e.g. Maria Santos" maxlength="40">
-    </div>
-    <div class="field">
-      <label>Your Role / Position</label>
-      <input type="text" id="joinRole" placeholder="e.g. General Manager, Construction & Manufacturing" maxlength="60">
-    </div>
-    <div class="field">
-      <label>Strategic Business Unit</label>
+    <div class="field"><label>Your Full Name</label><input type="text" id="joinName" placeholder="e.g. Maria Santos" maxlength="40"></div>
+    <div class="field"><label>Your Role / Position</label><input type="text" id="joinRole" placeholder="e.g. General Manager" maxlength="60"></div>
+    <div class="field"><label>Strategic Business Unit</label>
       <select id="joinBU">
         <option value="">Select your SBU</option>
         <option>Construction &amp; Manufacturing</option>
@@ -225,8 +199,10 @@
       </select>
     </div>
     <button class="join-btn" onclick="joinSession()">Enter Workshop →</button>
-    <div class="join-divider"></div>
-    <div class="session-info">All inputs are shared live with the group.<br>Your progress is saved automatically.</div>
+    <div class="join-privacy">
+      <span class="join-privacy-icon">🔒</span>
+      <span>Your nominations and ratings are <strong>private</strong> — only the facilitator can see them. They will not be visible to other participants unless the facilitator chooses to share.</span>
+    </div>
   </div>
 </div>
 
@@ -235,7 +211,7 @@
   <div class="tb-logo">PGB</div>
   <div class="tb-sep"></div>
   <div class="tb-title" id="tbTitle">Succession Planning Workshop</div>
-  <div class="tb-users" id="tbUsers"></div>
+  <div class="tb-user" id="tbUser"></div><span class="tb-sbu" id="tbSbu"></span>
   <div class="tb-sep"></div>
   <div class="sync-dot" id="syncDot"></div>
   <div style="font-size:10px;color:var(--dim);margin-left:5px;" id="syncLabel">Live</div>
@@ -246,9 +222,7 @@
 <!-- SIDEBAR -->
 <div id="sidebar" style="display:none;">
   <div class="nav-scroll">
-    <div style="padding:14px 20px 8px;">
-      <div style="font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;">Workshop Sections</div>
-    </div>
+    <div style="padding:14px 20px 8px;"><div style="font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;">Workshop Sections</div></div>
     <div class="nav-prog"><div class="nav-prog-fill" id="navFill" style="width:0%"></div></div>
     <div class="nav-item active" onclick="go('s0',this)"><span class="nav-num">—</span>Overview</div>
     <div class="nav-item" onclick="go('s1',this)"><span class="nav-num">1</span>Identifying Successors</div>
@@ -258,38 +232,39 @@
     <div class="nav-item" onclick="go('s5',this)"><span class="nav-num">5</span>Dev Rock Planner</div>
     <div class="nav-item" onclick="go('s6',this)"><span class="nav-num">6</span>Dashboard</div>
   </div>
-  <div class="sidebar-who">
-    <div class="who-label">Online Now</div>
-    <div id="whoList"></div>
+  <div class="sidebar-me">
+    <div class="me-label">Logged in as</div>
+    <div class="me-name" id="meName"></div>
+    <div class="me-role" id="meRole"></div>
+    <div class="me-sbu" id="meSbu"></div>
+    <div class="private-badge">🔒 Private workspace</div>
   </div>
 </div>
 
 <!-- MAIN -->
 <div id="main" style="display:none;">
 
-  <!-- S0 -->
+  <!-- S0 OVERVIEW -->
   <div class="section active" id="s0">
     <div class="sh-tag">Succession Planning Workshop · PGB</div>
     <div class="sh-title">Identifying &amp; Developing<br><em>Your Next Successors</em></div>
-    <div class="sh-desc">A half-day working session for PGB's senior leadership team. This workbook is shared live — every input you make is visible to all participants in real time.</div>
+    <div class="sh-desc">Your personal workbook for today's session. All inputs are saved privately under your name — only the facilitator can see submissions across participants.</div>
     <div class="card">
       <div class="card-title">Session Details</div>
       <div class="row2">
         <div class="field"><label>Workshop Date</label><input type="text" data-key="session_date" placeholder="e.g. April 15, 2025" oninput="sync(this)"></div>
         <div class="field"><label>Facilitator</label><input type="text" data-key="session_facilitator" placeholder="Facilitator name" oninput="sync(this)"></div>
-        <div class="field"><label>Session Location</label><input type="text" data-key="session_location" placeholder="e.g. Boardroom, PGB HQ" oninput="sync(this)"></div>
-        <div class="field"><label>Dashboard Owner</label><input type="text" data-key="session_dashboard_owner" placeholder="Name of Dashboard Owner" oninput="sync(this)"></div>
       </div>
     </div>
     <div class="card">
-      <div class="card-title">Today's 6 Elements</div>
-      <div class="ov-grid">
-        <div class="ov-card" onclick="go('s1',document.querySelectorAll('.nav-item')[1])"><div class="ov-num">01</div><div class="ov-name">Candidate Identification</div><div class="ov-desc">Who has the potential to step into critical roles?</div></div>
-        <div class="ov-card" onclick="go('s2',document.querySelectorAll('.nav-item')[2])"><div class="ov-num">02</div><div class="ov-name">Role Understanding</div><div class="ov-desc">What does the role truly demand?</div></div>
-        <div class="ov-card" onclick="go('s3',document.querySelectorAll('.nav-item')[3])"><div class="ov-num">03</div><div class="ov-name">Readiness Assessment</div><div class="ov-desc">Core Values, GWC &amp; Competency calibration</div></div>
-        <div class="ov-card" onclick="go('s4',document.querySelectorAll('.nav-item')[4])"><div class="ov-num">04</div><div class="ov-name">Development Roadmap</div><div class="ov-desc">Growth Journey Map with milestones</div></div>
-        <div class="ov-card" onclick="go('s5',document.querySelectorAll('.nav-item')[5])"><div class="ov-num">05</div><div class="ov-name">Development Rocks</div><div class="ov-desc">SMART Rocks tied to PGB's EOS priorities</div></div>
-        <div class="ov-card" onclick="go('s6',document.querySelectorAll('.nav-item')[6])"><div class="ov-num">06</div><div class="ov-name">Ongoing Governance</div><div class="ov-desc">Dashboard review and quarterly cadence</div></div>
+      <div class="card-title">Today's 6 Sections</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:14px;cursor:pointer;" onclick="go('s1',document.querySelectorAll('.nav-item')[1])"><div style="font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);margin-bottom:5px;">01</div><div style="font-weight:600;font-size:13px;margin-bottom:3px;">Candidate Identification</div><div style="font-size:11px;color:var(--muted);">Who has the potential to step into critical roles?</div></div>
+        <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:14px;cursor:pointer;" onclick="go('s2',document.querySelectorAll('.nav-item')[2])"><div style="font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);margin-bottom:5px;">02</div><div style="font-weight:600;font-size:13px;margin-bottom:3px;">Role Understanding</div><div style="font-size:11px;color:var(--muted);">What does the role truly demand?</div></div>
+        <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:14px;cursor:pointer;" onclick="go('s3',document.querySelectorAll('.nav-item')[3])"><div style="font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);margin-bottom:5px;">03</div><div style="font-weight:600;font-size:13px;margin-bottom:3px;">Readiness Assessment</div><div style="font-size:11px;color:var(--muted);">Core Values, GWC &amp; Competency calibration</div></div>
+        <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:14px;cursor:pointer;" onclick="go('s4',document.querySelectorAll('.nav-item')[4])"><div style="font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);margin-bottom:5px;">04</div><div style="font-weight:600;font-size:13px;margin-bottom:3px;">Development Roadmap</div><div style="font-size:11px;color:var(--muted);">Growth Journey Map with milestones</div></div>
+        <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:14px;cursor:pointer;" onclick="go('s5',document.querySelectorAll('.nav-item')[5])"><div style="font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);margin-bottom:5px;">05</div><div style="font-weight:600;font-size:13px;margin-bottom:3px;">Development Rocks</div><div style="font-size:11px;color:var(--muted);">SMART Rocks tied to PGB's EOS priorities</div></div>
+        <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:14px;cursor:pointer;" onclick="go('s6',document.querySelectorAll('.nav-item')[6])"><div style="font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);margin-bottom:5px;">06</div><div style="font-weight:600;font-size:13px;margin-bottom:3px;">Ongoing Governance</div><div style="font-size:11px;color:var(--muted);">Dashboard review and quarterly cadence</div></div>
       </div>
     </div>
     <div class="callout">"Today is not a performance review. It is a strategic investment in PGB's future."</div>
@@ -300,18 +275,18 @@
   <div class="section" id="s1">
     <div class="sh-tag">Section 1 · 1:30 – 2:00 PM</div>
     <div class="sh-title">Identifying Your<br><em>Next Successor</em></div>
-    <div class="sh-desc">Name potential successor candidates — looking across direct reports, emerging talent, and cross-functional peers. No ratings yet. Nomination exercise only.</div>
+    <div class="sh-desc">Nominate potential successor candidates from your area — direct reports, emerging talent, and cross-functional peers. Your nominations are private to you and the facilitator.</div>
     <div class="callout">"If I were out of the picture tomorrow — who steps in, and how ready are they really?"</div>
     <div class="card">
       <div class="card-title">Role Being Planned For</div>
       <div class="row2">
-        <div class="field"><label>Critical Role / Position</label><input type="text" data-key="s1_role" placeholder="e.g. Operations Manager – Construction &amp; Manufacturing" oninput="sync(this)"></div>
+        <div class="field"><label>Critical Role / Position</label><input type="text" data-key="s1_role" placeholder="e.g. Operations Manager" oninput="sync(this)"></div>
         <div class="field"><label>Current Role Holder</label><input type="text" data-key="s1_holder" placeholder="Current person in this role" oninput="sync(this)"></div>
       </div>
-      <div class="field"><label>Why is this role critical to PGB's continuity?</label><textarea data-key="s1_why_critical" placeholder="What breaks down if this role is vacant for 30 days?" oninput="sync(this)"></textarea></div>
+      <div class="field"><label>Why is this role critical?</label><textarea data-key="s1_why_critical" placeholder="What breaks down if this role is vacant for 30 days?" oninput="sync(this)"></textarea></div>
     </div>
     <div class="card">
-      <div class="card-title">Nominated Candidates</div>
+      <div class="card-title">Your Nominated Candidates</div>
       <p class="helper" style="margin-bottom:14px;">Aim for 2–4 names. Every nomination needs a specific observation — not a feeling.</p>
       <div id="s1Candidates"></div>
       <button class="add-btn" onclick="addCandidate()">+ Add Candidate</button>
@@ -319,10 +294,10 @@
     <div class="card">
       <div class="card-title">Talent Pool Reflection</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:12px;"><div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:5px;">Direct Reports</div><div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Who on your team is growing beyond their current role?</div><textarea data-key="s1_pool_direct" placeholder="Notes..." oninput="sync(this)" style="min-height:56px;font-size:11px;"></textarea></div>
-        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:12px;"><div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:5px;">Emerging Leaders</div><div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Who 1–2 levels down is being underestimated?</div><textarea data-key="s1_pool_emerging" placeholder="Notes..." oninput="sync(this)" style="min-height:56px;font-size:11px;"></textarea></div>
-        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:12px;"><div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:5px;">Cross-Functional</div><div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Who in another function has the strategic scope?</div><textarea data-key="s1_pool_cross" placeholder="Notes..." oninput="sync(this)" style="min-height:56px;font-size:11px;"></textarea></div>
-        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:12px;"><div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:5px;">Who Might You Overlook?</div><div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Is it a real capability gap — or comfort?</div><textarea data-key="s1_pool_overlook" placeholder="Name and honest reflection..." oninput="sync(this)" style="min-height:56px;font-size:11px;"></textarea></div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:12px;"><div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:5px;">Direct Reports</div><textarea data-key="s1_pool_direct" placeholder="Who on your team is growing beyond their current role?" oninput="sync(this)" style="min-height:56px;font-size:11px;"></textarea></div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:12px;"><div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:5px;">Emerging Leaders</div><textarea data-key="s1_pool_emerging" placeholder="Who 1–2 levels down is being underestimated?" oninput="sync(this)" style="min-height:56px;font-size:11px;"></textarea></div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:12px;"><div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:5px;">Cross-Functional</div><textarea data-key="s1_pool_cross" placeholder="Who in another function has the strategic scope?" oninput="sync(this)" style="min-height:56px;font-size:11px;"></textarea></div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:12px;"><div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:5px;">Who Might You Overlook?</div><textarea data-key="s1_pool_overlook" placeholder="Is it a real capability gap — or comfort?" oninput="sync(this)" style="min-height:56px;font-size:11px;"></textarea></div>
       </div>
     </div>
     <div style="text-align:right;margin-top:20px;"><button class="btn btn-primary" onclick="go('s2',document.querySelectorAll('.nav-item')[2])">Continue to Section 2 →</button></div>
@@ -332,14 +307,14 @@
   <div class="section" id="s2">
     <div class="sh-tag">Section 2 · 2:00 – 3:00 PM</div>
     <div class="sh-title">Understanding the Role &amp;<br><em>Creating a Transition Plan</em></div>
-    <div class="sh-desc">Define what the role truly demands — accountabilities, excellence indicators, key relationships — then build a phased transition plan.</div>
+    <div class="sh-desc">Define what your role truly demands — accountabilities, excellence indicators, and key relationships — then build a phased transition plan.</div>
     <div class="card">
       <div class="card-title">The 4 Essential Questions</div>
       <div class="field"><label>1. Top 3 Accountabilities — outcomes, not tasks</label><p class="helper">Verifiable, specific, time-bound.</p><div id="s2Accs"></div><button class="add-btn" onclick="addAcc()">+ Add Accountability</button></div>
       <hr>
-      <div class="field"><label>2. What does excellence look like?</label><textarea data-key="s2_excellence" placeholder="Observable behaviors only — not adjectives. What do you actually SEE?" oninput="sync(this)" style="min-height:90px;"></textarea></div>
+      <div class="field"><label>2. What does excellence look like?</label><textarea data-key="s2_excellence" placeholder="Observable behaviors only. What do you actually SEE?" oninput="sync(this)" style="min-height:90px;"></textarea></div>
       <hr>
-      <div class="field"><label>3. Key Relationships this role must own</label><p class="helper">Include upward, lateral, external.</p><div id="s2Rels"></div><button class="add-btn" onclick="addRel()">+ Add Relationship</button></div>
+      <div class="field"><label>3. Key Relationships this role must own</label><div id="s2Rels"></div><button class="add-btn" onclick="addRel()">+ Add Relationship</button></div>
       <hr>
       <div class="field"><label>4. Common failure modes in this transition</label><textarea data-key="s2_failures" placeholder="Where do people struggle? These become non-negotiable development priorities." oninput="sync(this)" style="min-height:90px;"></textarea></div>
     </div>
@@ -366,7 +341,7 @@
   <div class="section" id="s3">
     <div class="sh-tag">Section 3 · 3:00 – 4:00 PM</div>
     <div class="sh-title">Values, GWC &amp;<br><em>Competency Calibration</em></div>
-    <div class="sh-desc">Rate independently first — do not share until everyone has finished. Then calibrate as a group to reach a consensus Readiness Tier.</div>
+    <div class="sh-desc">Rate each of your nominated candidates independently. Your ratings are private — they will only be shared with the group when the facilitator reveals them.</div>
     <div class="callout"><strong style="color:var(--green)">+</strong> = Consistent pattern &nbsp;·&nbsp; <strong style="color:var(--amber)">+/–</strong> = Sometimes / Inconsistent &nbsp;·&nbsp; <strong style="color:var(--red)">–</strong> = Pattern of absence</div>
     <div id="s3Cards"></div>
     <button class="add-btn" onclick="addS3()">+ Add Candidate to Rate</button>
@@ -398,7 +373,6 @@
         <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:10px;text-align:center;"><span class="rt rt-j">Stronger Partnerships &amp; JVs</span></div>
       </div>
     </div>
-    <div class="callout"><strong>WEAK:</strong> "Improve communication skills." &nbsp;&nbsp; <strong>STRONG:</strong> "Facilitate monthly all-hands for 3 months. Collect feedback from 5+ direct reports each time. Share summary with HR by end of Q2."</div>
     <div id="s5Rocks"></div>
     <button class="add-btn" onclick="addRock()">+ Add Development Rock</button>
     <div style="text-align:right;margin-top:20px;"><button class="btn btn-primary" onclick="go('s6',document.querySelectorAll('.nav-item')[6])">Continue to Section 6 →</button></div>
@@ -408,7 +382,7 @@
   <div class="section" id="s6">
     <div class="sh-tag">Section 6 · 4:30 – 4:45 PM</div>
     <div class="sh-title">Succession Dashboard<br><em>&amp; Governance</em></div>
-    <div class="sh-desc">The plan lives only if it has an owner, a cadence, and a next review date.</div>
+    <div class="sh-desc">Complete your portion of the succession dashboard. The facilitator will consolidate all participants' entries into the master view.</div>
     <div class="bench">
       <div class="bc now"><div class="bc-num" id="bNow">0</div><div class="bc-lbl">Ready Now</div></div>
       <div class="bc soon"><div class="bc-num" id="bSoon">0</div><div class="bc-lbl">Ready Soon</div></div>
@@ -416,291 +390,150 @@
       <div class="bc unr"><div class="bc-num" id="bUnr">0</div><div class="bc-lbl">Unready</div></div>
     </div>
     <div class="card" style="overflow-x:auto;">
-      <div class="card-title">Live Succession Dashboard</div>
+      <div class="card-title">Your Succession Dashboard Entries</div>
       <table class="dt"><thead><tr><th>Successor</th><th>Current Role</th><th>Target Role</th><th>Tier</th><th>Current Rock</th><th>Mentor</th><th>Next Milestone</th><th>Date</th><th>Blockers</th><th></th></tr></thead><tbody id="dashBody"></tbody></table>
       <button class="add-btn" onclick="addDash()" style="margin-top:10px;">+ Add Successor Row</button>
     </div>
     <div class="card">
-      <div class="card-title">Governance Cadence</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:13px;"><div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:3px;">Weekly</div><div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Manager &amp; successor 1:1</div><textarea data-key="gov_weekly" placeholder="Who owns the weekly 1:1 per successor?" oninput="sync(this)" style="min-height:56px;font-size:11px;"></textarea></div>
-        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:13px;"><div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:3px;">First Quarterly Review</div><div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Name a specific date</div><input type="text" data-key="gov_quarterly" placeholder="e.g. July 10, 2025" oninput="sync(this)"></div>
-        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:13px;"><div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:3px;">Annual Workshop</div><div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Repeat full workshop annually</div><input type="text" data-key="gov_annual" placeholder="e.g. Q1 next year" oninput="sync(this)"></div>
-        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:3px;padding:13px;"><div style="font-weight:600;font-size:12px;color:var(--gold);margin-bottom:3px;">Dashboard Owner</div><div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Named publicly in the room</div><input type="text" data-key="gov_escalation" placeholder="Name of Dashboard Owner" oninput="sync(this)"></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Before You Leave</div>
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <div class="sc-item" style="font-size:13px;"><input type="checkbox"><strong>Dashboard Owner named and first quarterly review date confirmed</strong></div>
-        <div class="sc-item" style="font-size:13px;"><input type="checkbox"><strong>Every successor has a named manager, mentor, and at least one Rock</strong></div>
-        <div class="sc-item" style="font-size:13px;"><input type="checkbox"><strong>Each leader knows the one conversation they are having in the next 7 days</strong></div>
-        <div class="sc-item" style="font-size:13px;"><input type="checkbox"><strong>This workbook is saved and the Dashboard Owner has access</strong></div>
-      </div>
-      <hr>
-      <div class="field" style="margin-top:12px;"><label>My Commitment — The one thing I will do in the next 7 days</label><textarea data-key="commitment" placeholder="Be specific. Name names. Name dates." oninput="sync(this)" style="min-height:68px;"></textarea></div>
+      <div class="card-title">My Commitment — Next 7 Days</div>
+      <div class="field"><label>The one thing I will do in the next 7 days as a result of today</label><textarea data-key="commitment" placeholder="Be specific. Name names. Name dates." oninput="sync(this)" style="min-height:68px;"></textarea></div>
     </div>
     <div class="callout" style="text-align:center;font-size:13px;padding:16px 24px;">"A succession plan lives in the conversations that happen after today."</div>
-    <div style="text-align:center;margin-top:24px;"><button class="btn btn-primary" onclick="window.print()">Export Workbook as PDF</button></div>
+    <div style="text-align:center;margin-top:24px;"><button class="btn btn-primary" onclick="window.print()">Export My Workbook as PDF</button></div>
   </div>
 </div>
 
 <script>
-// ══════════════════════════════════════
-// SUPABASE CONFIG
-// ══════════════════════════════════════
-const SUPA_URL = 'https://xbzmkilksrcozcnbcwlj.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhiem1raWxrc3Jjb3pjbmJjd2xqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MDcwMTMsImV4cCI6MjA5MDA4MzAxM30.25yGZWjWrO175oJzfr0oKkS6W5w-UuSACTWcf21uy-0';
-const HEADERS = { 'Content-Type':'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Prefer': 'resolution=merge-duplicates' };
+const SUPA_URL='https://xbzmkilksrcozcnbcwlj.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhiem1raWxrc3Jjb3pjbmJjd2xqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MDcwMTMsImV4cCI6MjA5MDA4MzAxM30.25yGZWjWrO175oJzfr0oKkS6W5w-UuSACTWcf21uy-0';
+const HEADERS={'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'resolution=merge-duplicates'};
 
-async function dbUpsert(key, value, by) {
-  await fetch(`${SUPA_URL}/rest/v1/workshop_data`, {
-    method: 'POST',
-    headers: HEADERS,
-    body: JSON.stringify({ key, value, updated_by: by, updated_at: new Date().toISOString() })
-  });
+let ME={};
+let PREFIX=''; // all keys prefixed with participant slug
+let syncQueue={}, syncTimer=null;
+let s1C=0,s2A=0,s2R=0,s3C=0,s4C=0,s5C=0,s6C=0;
+
+// ── SUPABASE ──
+async function dbUpsert(key,value) {
+  await fetch(`${SUPA_URL}/rest/v1/workshop_data`,{method:'POST',headers:HEADERS,body:JSON.stringify({key,value,updated_by:ME.name,updated_at:new Date().toISOString()})});
+}
+async function dbGetMine() {
+  const r=await fetch(`${SUPA_URL}/rest/v1/workshop_data?key=like.${encodeURIComponent(PREFIX+'%')}&select=*`,{headers:HEADERS});
+  return r.ok?await r.json():[];
 }
 
-async function dbGetAll() {
-  const r = await fetch(`${SUPA_URL}/rest/v1/workshop_data?select=*`, { headers: HEADERS });
-  return r.ok ? await r.json() : [];
-}
-
-// ══════════════════════════════════════
-// STATE
-// ══════════════════════════════════════
-let ME = {};
-let syncQueue = {};
-let syncTimer = null;
-let pollTimer = null;
-let lastSeen = {};
-let s1C=0, s2A=0, s2R=0, s3C=0, s4C=0, s5C=0, s6C=0;
-
-// ══════════════════════════════════════
-// JOIN
-// ══════════════════════════════════════
+// ── JOIN ──
 function joinSession() {
-  const name = document.getElementById('joinName').value.trim();
-  const role = document.getElementById('joinRole').value.trim();
-  const bu   = document.getElementById('joinBU').value;
-  if (!name || !role || !bu) { alert('Please fill in all fields.'); return; }
-  ME = { name, role, bu, initials: name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) };
-  document.getElementById('joinScreen').style.display = 'none';
-  document.getElementById('topBar').style.display = 'flex';
-  document.getElementById('sidebar').style.display = 'flex';
-  document.getElementById('main').style.display = 'block';
+  const name=document.getElementById('joinName').value.trim();
+  const role=document.getElementById('joinRole').value.trim();
+  const bu=document.getElementById('joinBU').value;
+  if(!name||!role||!bu){alert('Please fill in all fields.');return;}
+  ME={name,role,bu,initials:name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)};
+  PREFIX='p:'+name.replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'')+':';
+  document.getElementById('joinScreen').style.display='none';
+  document.getElementById('topBar').style.display='flex';
+  document.getElementById('sidebar').style.display='flex';
+  document.getElementById('main').style.display='block';
+  document.getElementById('tbUser').textContent=name;
+  document.getElementById('tbSbu').textContent='· '+bu;
+  document.getElementById('meName').textContent=name;
+  document.getElementById('meRole').textContent=role;
+  document.getElementById('meSbu').textContent=bu;
   init();
 }
 
 async function init() {
-  addCandidate(); addAcc(); addAcc(); addAcc(); addRel(); addRel(); addRel();
-  addS3(); addMap(); addRock(); addDash();
-  await registerPresence();
-  await loadAll();
-  pollTimer = setInterval(poll, 3000);
+  // register presence
+  await dbUpsert('presence:'+ME.name.replace(/\s+/g,'_'),JSON.stringify({name:ME.name,role:ME.role,bu:ME.bu,initials:ME.initials,ts:Date.now()}));
+  setInterval(async()=>await dbUpsert('presence:'+ME.name.replace(/\s+/g,'_'),JSON.stringify({name:ME.name,role:ME.role,bu:ME.bu,initials:ME.initials,ts:Date.now()})),25000);
+  // build UI
+  addCandidate();addAcc();addAcc();addAcc();addRel();addRel();addRel();
+  addS3();addMap();addRock();addDash();
+  // load saved data
+  await loadMine();
 }
 
-// ══════════════════════════════════════
-// PRESENCE
-// ══════════════════════════════════════
-async function registerPresence() {
-  const key = 'presence:' + ME.name.replace(/\s+/g,'_');
-  await dbUpsert(key, JSON.stringify({ name:ME.name, role:ME.role, bu:ME.bu, initials:ME.initials, ts:Date.now() }), ME.name);
-  setInterval(async () => {
-    await dbUpsert(key, JSON.stringify({ name:ME.name, role:ME.role, bu:ME.bu, initials:ME.initials, ts:Date.now() }), ME.name);
-  }, 25000);
-}
-
-async function refreshPresence(rows) {
-  const now = Date.now();
-  const users = rows
-    .filter(r => r.key.startsWith('presence:'))
-    .map(r => { try { return JSON.parse(r.value); } catch(e) { return null; } })
-    .filter(u => u && (now - u.ts) < 90000);
-
-  const tbUsers = document.getElementById('tbUsers');
-  tbUsers.innerHTML = '';
-  users.slice(0,6).forEach(u => {
-    const d = document.createElement('div');
-    d.className = 'tb-av';
-    d.title = u.name + ' · ' + u.role;
-    d.textContent = u.initials || '??';
-    if (u.name === ME.name) d.style.borderColor = 'var(--gold)';
-    tbUsers.appendChild(d);
-  });
-
-  const whoList = document.getElementById('whoList');
-  whoList.innerHTML = '';
-  users.forEach(u => {
-    const row = document.createElement('div');
-    row.className = 'who-row';
-    row.innerHTML = `<div class="who-dot"></div><span class="${u.name===ME.name?'who-you':''}">${u.name}${u.name===ME.name?' (you)':''}</span>`;
-    whoList.appendChild(row);
-  });
-}
-
-// ══════════════════════════════════════
-// SYNC — write on input
-// ══════════════════════════════════════
+// ── SYNC ──
 function sync(el) {
-  const key = el.dataset.key;
-  if (!key) return;
+  const key=el.dataset.key; if(!key)return;
   setSyncDot('syncing');
-  syncQueue[key] = el.value;
+  syncQueue[PREFIX+key]=el.value;
   clearTimeout(syncTimer);
-  syncTimer = setTimeout(flushSync, 500);
+  syncTimer=setTimeout(flushSync,500);
   updateProgress();
 }
 
 async function flushSync() {
-  const q = { ...syncQueue }; syncQueue = {};
-  for (const [key, value] of Object.entries(q)) {
-    await dbUpsert(key, value, ME.name);
-    lastSeen[key] = value;
-  }
+  const q={...syncQueue};syncQueue={};
+  for(const[key,value]of Object.entries(q)) await dbUpsert(key,value);
   setSyncDot('synced');
-  setTimeout(() => setSyncDot('live'), 1800);
+  setTimeout(()=>setSyncDot('live'),1800);
 }
 
-// ══════════════════════════════════════
-// POLL — read remote changes
-// ══════════════════════════════════════
-async function poll() {
-  const rows = await dbGetAll();
-  await refreshPresence(rows);
-  rows.forEach(row => {
-    if (row.key.startsWith('presence:')) return;
-    if (row.updated_by === ME.name) return;
-    if (lastSeen[row.key] === row.value) return;
-    lastSeen[row.key] = row.value;
-    // ratings
-    if (row.key.startsWith('rating:')) {
-      const btn = document.querySelector(`[data-rating-key="${row.key.replace('rating:','')}"][data-val="${row.value}"]`);
-      if (btn) applyRating(btn, row.value);
-      return;
+async function loadMine() {
+  const rows=await dbGetMine();
+  rows.forEach(row=>{
+    const localKey=row.key.replace(PREFIX,'');
+    if(localKey.startsWith('rating:')){
+      const btn=document.querySelector(`[data-rating-key="${localKey.replace('rating:','')}"][data-val="${row.value}"]`);
+      if(btn)applyRating(btn,row.value);return;
     }
-    // tiers
-    if (row.key.startsWith('tier:')) {
-      const card = document.querySelector(`[data-tier-key="${row.key.replace('tier:','')}"][data-tier="${row.value}"]`);
-      if (card) applyTier(card);
-      updateBench();
-      return;
+    if(localKey.startsWith('tier:')){
+      const card=document.querySelector(`[data-tier-key="${localKey.replace('tier:','')}"][data-tier="${row.value}"]`);
+      if(card)applyTier(card);updateBench();return;
     }
-    // regular fields
-    const el = document.querySelector(`[data-key="${row.key}"]`);
-    if (el && document.activeElement !== el) {
-      el.value = row.value;
-      el.classList.add('remote-flash');
-      setTimeout(() => el.classList.remove('remote-flash'), 1400);
-    }
+    const el=document.querySelector(`[data-key="${localKey}"]`);
+    if(el)el.value=row.value;
   });
   updateBench();
 }
 
-// ══════════════════════════════════════
-// LOAD ALL on join
-// ══════════════════════════════════════
-async function loadAll() {
-  const rows = await dbGetAll();
-  rows.forEach(row => {
-    if (row.key.startsWith('presence:')) return;
-    lastSeen[row.key] = row.value;
-    if (row.key.startsWith('rating:')) {
-      const btn = document.querySelector(`[data-rating-key="${row.key.replace('rating:','')}"][data-val="${row.value}"]`);
-      if (btn) applyRating(btn, row.value);
-      return;
-    }
-    if (row.key.startsWith('tier:')) {
-      const card = document.querySelector(`[data-tier-key="${row.key.replace('tier:','')}"][data-tier="${row.value}"]`);
-      if (card) applyTier(card);
-      return;
-    }
-    const el = document.querySelector(`[data-key="${row.key}"]`);
-    if (el) el.value = row.value;
-  });
-  updateBench();
-}
-
-// ══════════════════════════════════════
-// NAV
-// ══════════════════════════════════════
-const titles = {s0:'Overview',s1:'Section 1 — Identifying Successors',s2:'Section 2 — Understanding the Role',s3:'Section 3 — PA & GWC Calibration',s4:'Section 4 — Growth Journey Map',s5:'Section 5 — Dev Rock Planner',s6:'Section 6 — Dashboard & Governance'};
-function go(id, el) {
+// ── NAV ──
+const titles={s0:'Overview',s1:'Section 1 — Identifying Successors',s2:'Section 2 — Understanding the Role',s3:'Section 3 — PA & GWC Calibration',s4:'Section 4 — Growth Journey Map',s5:'Section 5 — Dev Rock Planner',s6:'Section 6 — Dashboard & Governance'};
+function go(id,el){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  if (el) el.classList.add('active');
-  document.getElementById('tbTitle').textContent = titles[id]||'';
+  if(el)el.classList.add('active');
+  document.getElementById('tbTitle').textContent=titles[id]||'';
   window.scrollTo(0,0);
 }
+function updateProgress(){let t=0,d=0;document.querySelectorAll('input[type="text"][data-key],textarea[data-key]').forEach(el=>{t++;if(el.value.trim())d++;});document.getElementById('navFill').style.width=(t?Math.round(d/t*100):0)+'%';}
+function setSyncDot(s){const dot=document.getElementById('syncDot'),lbl=document.getElementById('syncLabel');dot.className='sync-dot '+(s==='syncing'?'syncing':s==='synced'?'synced':'');lbl.textContent=s==='syncing'?'Saving…':s==='synced'?'Saved':'Live';}
 
-function updateProgress() {
-  let t=0,d=0;
-  document.querySelectorAll('input[type="text"][data-key],textarea[data-key]').forEach(el=>{t++;if(el.value.trim())d++;});
-  document.getElementById('navFill').style.width = (t?Math.round(d/t*100):0)+'%';
-}
-
-function setSyncDot(s) {
-  const dot=document.getElementById('syncDot'), lbl=document.getElementById('syncLabel');
-  dot.className='sync-dot '+(s==='syncing'?'syncing':s==='synced'?'synced':'');
-  lbl.textContent=s==='syncing'?'Saving…':s==='synced'?'Saved':'Live';
-}
-
-// ══════════════════════════════════════
-// SECTION 1
-// ══════════════════════════════════════
-function addCandidate() {
-  s1C++; const c=s1C;
-  const div=document.createElement('div'); div.className='entry'; div.id='cand'+c;
+// ── SECTION 1 ──
+function addCandidate(){
+  s1C++;const c=s1C;
+  const div=document.createElement('div');div.className='entry';div.id='cand'+c;
   div.innerHTML=`<div class="entry-n">${String(c).padStart(2,'0')}</div>
     <div class="row2" style="padding-right:40px;">
       <div class="field"><label>Candidate Name</label><input type="text" data-key="s1_cand${c}_name" placeholder="Full name" oninput="sync(this)"></div>
       <div class="field"><label>Current Role</label><input type="text" data-key="s1_cand${c}_role" placeholder="Current position" oninput="sync(this)"></div>
       <div class="field"><label>Target Role</label><input type="text" data-key="s1_cand${c}_target" placeholder="Role being considered for" oninput="sync(this)"></div>
-      <div class="field"><label>Nominated By</label><input type="text" data-key="s1_cand${c}_by" placeholder="Nominating leader" oninput="sync(this)"></div>
+      <div class="field"><label>SBU / Function</label><input type="text" data-key="s1_cand${c}_sbu" placeholder="Their SBU or function" oninput="sync(this)"></div>
     </div>
     <div class="field"><label>Why Nominated — Specific Observation</label><textarea data-key="s1_cand${c}_why" placeholder="What specific behavior or result makes this person a candidate?" oninput="sync(this)"></textarea></div>
     <div style="margin-top:10px;"><button class="btn btn-del" onclick="document.getElementById('cand${c}').remove()">Remove</button></div>`;
   document.getElementById('s1Candidates').appendChild(div);
 }
 
-// ══════════════════════════════════════
-// SECTION 2
-// ══════════════════════════════════════
-function addAcc() {
-  s2A++; const c=s2A;
-  const div=document.createElement('div'); div.style.cssText='display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;';
-  div.innerHTML=`<span style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold-dim);padding-top:10px;min-width:18px;">${c}.</span>
-    <input type="text" data-key="s2_acc${c}" placeholder="Outcome-based accountability with a number and timeframe" oninput="sync(this)" style="flex:1;">
-    <button class="btn btn-del" style="margin-top:2px;" onclick="this.parentElement.remove()">×</button>`;
-  document.getElementById('s2Accs').appendChild(div);
-}
+// ── SECTION 2 ──
+function addAcc(){s2A++;const c=s2A;const div=document.createElement('div');div.style.cssText='display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;';div.innerHTML=`<span style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold-dim);padding-top:10px;min-width:18px;">${c}.</span><input type="text" data-key="s2_acc${c}" placeholder="Outcome-based accountability" oninput="sync(this)" style="flex:1;"><button class="btn btn-del" style="margin-top:2px;" onclick="this.parentElement.remove()">×</button>`;document.getElementById('s2Accs').appendChild(div);}
+function addRel(){s2R++;const c=s2R;const div=document.createElement('div');div.style.cssText='display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;';div.innerHTML=`<span style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold-dim);padding-top:10px;min-width:18px;">${c}.</span><input type="text" data-key="s2_rel${c}" placeholder="Key relationship this role must own" oninput="sync(this)" style="flex:1;"><button class="btn btn-del" style="margin-top:2px;" onclick="this.parentElement.remove()">×</button>`;document.getElementById('s2Rels').appendChild(div);}
 
-function addRel() {
-  s2R++; const c=s2R;
-  const div=document.createElement('div'); div.style.cssText='display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;';
-  div.innerHTML=`<span style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold-dim);padding-top:10px;min-width:18px;">${c}.</span>
-    <input type="text" data-key="s2_rel${c}" placeholder="e.g. DOLE Regional Office — compliance relationship, owned directly" oninput="sync(this)" style="flex:1;">
-    <button class="btn btn-del" style="margin-top:2px;" onclick="this.parentElement.remove()">×</button>`;
-  document.getElementById('s2Rels').appendChild(div);
-}
-
-// ══════════════════════════════════════
-// SECTION 3
-// ══════════════════════════════════════
-function addS3() {
-  s3C++; const c=s3C;
+// ── SECTION 3 ──
+function addS3(){
+  s3C++;const c=s3C;
   const comps=['Job Knowledge & Skills','Decision Making & Problem Solving','Communication','Planning & Organizing','Leadership','Customer Focus'];
-  const div=document.createElement('div'); div.className='card'; div.id='s3c'+c;
-  div.innerHTML=`
-    <div class="card-title">Candidate ${c}</div>
+  const div=document.createElement('div');div.className='card';div.id='s3c'+c;
+  div.innerHTML=`<div class="card-title">Candidate ${c}</div>
     <div class="row2" style="margin-bottom:14px;">
       <div class="field"><label>Candidate Name</label><input type="text" data-key="s3_c${c}_name" placeholder="Name" oninput="sync(this)"></div>
       <div class="field"><label>Target Role</label><input type="text" data-key="s3_c${c}_target" placeholder="Role being assessed for" oninput="sync(this)"></div>
     </div>
     <div style="margin-bottom:14px;">
       <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);letter-spacing:.12em;margin-bottom:10px;text-transform:uppercase;">Core Values — All 3 must score "+" to qualify</div>
-      ${[['Pagsalig','Build on trust — Does what they say. Trustworthy under pressure.'],['Hini-usang Pagkugi','We keep going together — Works toward team goals, pulls in PGB\'s direction.'],['Pagpalambo','We strive to make things better — Grows without being asked. Brings solutions.']].map((v,i)=>`
+      ${[['Pagsalig','Build on trust — Does what they say. Trustworthy under pressure.'],['Hini-usang Pagkugi','We keep going together — Works toward team goals.'],['Pagpalambo','We strive to make things better — Grows without being asked.']].map((v,i)=>`
       <div class="vr"><div><div class="vn">${v[0]}</div><div class="vs">${v[1]}</div></div>
       <div class="rg">${rbHtml('s3_c'+c+'_cv'+i)}</div></div>`).join('')}
     </div>
@@ -714,13 +547,9 @@ function addS3() {
     </div>
     <div style="margin-bottom:14px;">
       <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);letter-spacing:.12em;margin-bottom:8px;text-transform:uppercase;">Competency Assessment</div>
-      <div class="comp-g">${comps.map((n,i)=>`
-        <div class="comp-r"><span class="comp-num">0${i+1}</span><span class="comp-n">${n}</span>
-        <div class="rg">${rbHtml('s3_c'+c+'_comp'+i)}</div></div>`).join('')}
-      </div>
+      <div class="comp-g">${comps.map((n,i)=>`<div class="comp-r"><span class="comp-num">0${i+1}</span><span class="comp-n">${n}</span><div class="rg">${rbHtml('s3_c'+c+'_comp'+i)}</div></div>`).join('')}</div>
     </div>
-    <div>
-      <label>Consensus Readiness Tier</label>
+    <div><label>Consensus Readiness Tier</label>
       <div class="tier-grid">
         ${tcHtml(c,'now','Ready Now','3/3 CV · 3/3 GWC · 6/6 CA','var(--green)')}
         ${tcHtml(c,'soon','Ready Soon','3/3 CV · 2/3 GWC · 4+/6 CA','var(--blue)')}
@@ -728,127 +557,71 @@ function addS3() {
         ${tcHtml(c,'unready','Unready','Fails CV · 0/3 GWC · 1(–)/6 CA','var(--red)')}
       </div>
     </div>
-    <div class="field" style="margin-top:10px;"><label>Development Focus</label>
-      <textarea data-key="s3_c${c}_devfocus" placeholder="Top 2–3 development priorities based on the ratings above." oninput="sync(this)"></textarea></div>
-    <div style="margin-top:10px;"><button class="btn btn-del" onclick="document.getElementById('s3c${c}').remove()">Remove Candidate</button></div>`;
+    <div class="field" style="margin-top:10px;"><label>Development Focus</label><textarea data-key="s3_c${c}_devfocus" placeholder="Top 2–3 development priorities based on the ratings above." oninput="sync(this)"></textarea></div>
+    <div style="margin-top:10px;"><button class="btn btn-del" onclick="document.getElementById('s3c${c}').remove()">Remove</button></div>`;
   document.getElementById('s3Cards').appendChild(div);
 }
 
-function rbHtml(key) {
-  return `<button class="rb" data-rating-key="${key}" data-val="plus" onclick="setRating(this,'plus')">+</button>
-          <button class="rb" data-rating-key="${key}" data-val="mixed" onclick="setRating(this,'mixed')">+/–</button>
-          <button class="rb" data-rating-key="${key}" data-val="minus" onclick="setRating(this,'minus')">–</button>`;
-}
+function rbHtml(key){return `<button class="rb" data-rating-key="${key}" data-val="plus" onclick="setRating(this,'plus')">+</button><button class="rb" data-rating-key="${key}" data-val="mixed" onclick="setRating(this,'mixed')">+/–</button><button class="rb" data-rating-key="${key}" data-val="minus" onclick="setRating(this,'minus')">–</button>`;}
+function tcHtml(c,tier,label,crit,color){return `<div class="tc" data-tier-key="s3_c${c}_tier" data-tier="${tier}" onclick="setTier(this,'${tier}')"><div class="tc-lbl" style="color:${color};">${label}</div><div class="tc-cr">${crit}</div></div>`;}
 
-function tcHtml(c, tier, label, crit, color) {
-  return `<div class="tc" data-tier-key="s3_c${c}_tier" data-tier="${tier}" onclick="setTier(this,'${tier}')">
-    <div class="tc-lbl" style="color:${color};">${label}</div><div class="tc-cr">${crit}</div></div>`;
-}
+async function setRating(btn,val){applyRating(btn,val);await dbUpsert(PREFIX+'rating:'+btn.dataset.ratingKey,val);}
+function applyRating(btn,val){btn.closest('.rg').querySelectorAll('.rb').forEach(b=>b.className='rb');btn.classList.add(val==='plus'?'rp':val==='mixed'?'rm':'rn');}
+async function setTier(card,tier){applyTier(card);await dbUpsert(PREFIX+'tier:'+card.dataset.tierKey,tier);updateBench();}
+function applyTier(card){card.closest('.tier-grid').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));card.classList.add('sel');}
+function updateBench(){const c={now:0,soon:0,later:0,unready:0};document.querySelectorAll('.tc.sel').forEach(card=>{const t=card.dataset.tier;if(c[t]!==undefined)c[t]++;});document.getElementById('bNow').textContent=c.now;document.getElementById('bSoon').textContent=c.soon;document.getElementById('bLater').textContent=c.later;document.getElementById('bUnr').textContent=c.unready;}
 
-async function setRating(btn, val) {
-  applyRating(btn, val);
-  const key = btn.dataset.ratingKey;
-  await dbUpsert('rating:' + key, val, ME.name);
-  lastSeen['rating:' + key] = val;
-}
-
-function applyRating(btn, val) {
-  btn.closest('.rg').querySelectorAll('.rb').forEach(b=>b.className='rb');
-  btn.classList.add(val==='plus'?'rp':val==='mixed'?'rm':'rn');
-}
-
-async function setTier(card, tier) {
-  applyTier(card);
-  const key = card.dataset.tierKey;
-  await dbUpsert('tier:' + key, tier, ME.name);
-  lastSeen['tier:' + key] = tier;
-  updateBench();
-}
-
-function applyTier(card) {
-  card.closest('.tier-grid').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));
-  card.classList.add('sel');
-}
-
-function updateBench() {
-  const c={now:0,soon:0,later:0,unready:0};
-  document.querySelectorAll('.tc.sel').forEach(card=>{const t=card.dataset.tier;if(c[t]!==undefined)c[t]++;});
-  document.getElementById('bNow').textContent=c.now;
-  document.getElementById('bSoon').textContent=c.soon;
-  document.getElementById('bLater').textContent=c.later;
-  document.getElementById('bUnr').textContent=c.unready;
-}
-
-// ══════════════════════════════════════
-// SECTION 4
-// ══════════════════════════════════════
-function addMap() {
-  s4C++; const c=s4C;
-  const div=document.createElement('div'); div.className='card'; div.id='map'+c;
-  div.innerHTML=`
-    <div class="card-title">Growth Journey Map — Successor ${c}</div>
+// ── SECTION 4 ──
+function addMap(){
+  s4C++;const c=s4C;const div=document.createElement('div');div.className='card';div.id='map'+c;
+  div.innerHTML=`<div class="card-title">Growth Journey Map — Successor ${c}</div>
     <div class="row2" style="margin-bottom:14px;">
       <div class="field"><label>Successor Name</label><input type="text" data-key="s4_m${c}_name" placeholder="Name" oninput="sync(this)"></div>
       <div class="field"><label>Readiness Tier</label><select data-key="s4_m${c}_tier" onchange="sync(this)"><option value="">Select tier</option><option>Ready Now</option><option>Ready Soon</option><option>Ready Later</option></select></div>
     </div>
-    <div class="field"><label>1. Competency Focus (max 3)</label><p class="helper">T = Technical · NT = Non-Technical. Name HOW they develop it.</p>
-      <textarea data-key="s4_m${c}_comp" placeholder="e.g. Leadership (NT) — Current: 2 → Target: 4. Method: Lead cross-functional team for Q3 process review." oninput="sync(this)" style="min-height:86px;"></textarea></div>
-    <div class="field"><label>2. Stretch Assignment</label><p class="helper">Real work, not a training program. Specific deliverable, scope, and deadline.</p>
-      <textarea data-key="s4_m${c}_stretch" placeholder="STRONG: 'Lead the Q3 cross-SBU process efficiency review end-to-end — present findings to leadership by September 30.'" oninput="sync(this)" style="min-height:76px;"></textarea></div>
+    <div class="field"><label>1. Competency Focus (max 3)</label><textarea data-key="s4_m${c}_comp" placeholder="e.g. Leadership (NT) — Current: 2 → Target: 4. Method: Lead cross-functional team for Q3 process review." oninput="sync(this)" style="min-height:80px;"></textarea></div>
+    <div class="field"><label>2. Stretch Assignment</label><textarea data-key="s4_m${c}_stretch" placeholder="Specific deliverable, scope, and deadline." oninput="sync(this)" style="min-height:72px;"></textarea></div>
     <div class="field"><label>3. Milestone Targets</label>
       <div class="ms-track">
-        <div class="ms-band"><div class="ms-lbl">0–3 Months</div><textarea data-key="s4_m${c}_ms1" placeholder="Verifiable outcome?" oninput="sync(this)" style="min-height:68px;font-size:11px;"></textarea></div>
-        <div class="ms-band"><div class="ms-lbl">3–6 Months</div><textarea data-key="s4_m${c}_ms2" placeholder="Verifiable outcome?" oninput="sync(this)" style="min-height:68px;font-size:11px;"></textarea></div>
-        <div class="ms-band"><div class="ms-lbl">6–12 Months</div><textarea data-key="s4_m${c}_ms3" placeholder="Ready Later only." oninput="sync(this)" style="min-height:68px;font-size:11px;"></textarea></div>
-        <div class="ms-band"><div class="ms-lbl">12–18 Months</div><textarea data-key="s4_m${c}_ms4" placeholder="Ready Later only." oninput="sync(this)" style="min-height:68px;font-size:11px;"></textarea></div>
+        <div class="ms-band"><div class="ms-lbl">0–3 Months</div><textarea data-key="s4_m${c}_ms1" placeholder="Verifiable outcome?" oninput="sync(this)" style="min-height:64px;font-size:11px;"></textarea></div>
+        <div class="ms-band"><div class="ms-lbl">3–6 Months</div><textarea data-key="s4_m${c}_ms2" placeholder="Verifiable outcome?" oninput="sync(this)" style="min-height:64px;font-size:11px;"></textarea></div>
+        <div class="ms-band"><div class="ms-lbl">6–12 Months</div><textarea data-key="s4_m${c}_ms3" placeholder="Ready Later only." oninput="sync(this)" style="min-height:64px;font-size:11px;"></textarea></div>
+        <div class="ms-band"><div class="ms-lbl">12–18 Months</div><textarea data-key="s4_m${c}_ms4" placeholder="Ready Later only." oninput="sync(this)" style="min-height:64px;font-size:11px;"></textarea></div>
       </div>
     </div>
     <div class="row2">
-      <div class="field"><label>4. Support Needed</label><textarea data-key="s4_m${c}_support" placeholder="Mentor: [Name]&#10;Training: [Program]&#10;Leadership time: [Type & frequency]&#10;Barrier to remove: [Specific]" oninput="sync(this)" style="min-height:86px;"></textarea></div>
-      <div class="field"><label>5. Readiness Milestone</label><textarea data-key="s4_m${c}_readiness" placeholder="Single observable criteria. Must be verifiable — not a feeling." oninput="sync(this)" style="min-height:86px;"></textarea></div>
+      <div class="field"><label>4. Support Needed</label><textarea data-key="s4_m${c}_support" placeholder="Mentor: [Name]&#10;Training: [Program]&#10;Barrier to remove: [Specific]" oninput="sync(this)" style="min-height:80px;"></textarea></div>
+      <div class="field"><label>5. Readiness Milestone</label><textarea data-key="s4_m${c}_readiness" placeholder="Single observable criteria. Must be verifiable." oninput="sync(this)" style="min-height:80px;"></textarea></div>
     </div>
     <div style="margin-top:10px;"><button class="btn btn-del" onclick="document.getElementById('map${c}').remove()">Remove Map</button></div>`;
   document.getElementById('s4Maps').appendChild(div);
 }
 
-// ══════════════════════════════════════
-// SECTION 5
-// ══════════════════════════════════════
-function addRock() {
-  s5C++; const c=s5C;
-  const div=document.createElement('div'); div.className='entry'; div.id='rock'+c;
+// ── SECTION 5 ──
+function addRock(){
+  s5C++;const c=s5C;const div=document.createElement('div');div.className='entry';div.id='rock'+c;
   div.innerHTML=`<div class="entry-n">${String(c).padStart(2,'0')}</div>
     <div class="row2" style="padding-right:44px;">
       <div class="field"><label>Successor This Rock Serves</label><input type="text" data-key="s5_r${c}_successor" placeholder="Name" oninput="sync(this)"></div>
-      <div class="field"><label>Links to EOS Rock</label>
-        <select data-key="s5_r${c}_eos" onchange="sync(this)"><option value="">Select PGB Strategic Rock</option>
-          <option>Succession Plan in Place</option><option>Stronger Cash Position</option>
-          <option>Productivity &amp; Process Efficiencies</option><option>Stronger Partnerships &amp; JVs</option>
-        </select></div>
+      <div class="field"><label>Links to EOS Rock</label><select data-key="s5_r${c}_eos" onchange="sync(this)"><option value="">Select PGB Strategic Rock</option><option>Succession Plan in Place</option><option>Stronger Cash Position</option><option>Productivity &amp; Process Efficiencies</option><option>Stronger Partnerships &amp; JVs</option></select></div>
     </div>
-    <div class="field"><label>Development Rock Statement (SMART)</label>
-      <textarea data-key="s5_r${c}_statement" placeholder="Write the complete SMART Rock statement here…" oninput="sync(this)"></textarea></div>
+    <div class="field"><label>Development Rock Statement (SMART)</label><textarea data-key="s5_r${c}_statement" placeholder="Write the complete SMART Rock statement here…" oninput="sync(this)"></textarea></div>
     <div class="row3">
       <div class="field"><label>KPI / Measurable Outcome</label><input type="text" data-key="s5_r${c}_kpi" placeholder="e.g. 3 feedback reports submitted" oninput="sync(this)"></div>
       <div class="field"><label>Due Date (specific)</label><input type="text" data-key="s5_r${c}_date" placeholder="e.g. June 30, 2025" oninput="sync(this)"></div>
-      <div class="field"><label>Rock Owner (must be successor)</label><input type="text" data-key="s5_r${c}_owner" placeholder="Successor's name" oninput="sync(this)"></div>
+      <div class="field"><label>Rock Owner</label><input type="text" data-key="s5_r${c}_owner" placeholder="Successor's name" oninput="sync(this)"></div>
     </div>
     <div style="margin-top:10px;"><button class="btn btn-del" onclick="document.getElementById('rock${c}').remove()">Remove Rock</button></div>`;
   document.getElementById('s5Rocks').appendChild(div);
 }
 
-// ══════════════════════════════════════
-// SECTION 6
-// ══════════════════════════════════════
-function addDash() {
-  s6C++; const c=s6C;
-  const tr=document.createElement('tr'); tr.id='dr'+c;
-  tr.innerHTML=`
-    <td><input type="text" data-key="s6_d${c}_name" placeholder="Name" oninput="sync(this)"></td>
+// ── SECTION 6 ──
+function addDash(){
+  s6C++;const c=s6C;const tr=document.createElement('tr');tr.id='dr'+c;
+  tr.innerHTML=`<td><input type="text" data-key="s6_d${c}_name" placeholder="Name" oninput="sync(this)"></td>
     <td><input type="text" data-key="s6_d${c}_cur" placeholder="Current role" oninput="sync(this)"></td>
     <td><input type="text" data-key="s6_d${c}_tgt" placeholder="Target role" oninput="sync(this)"></td>
-    <td><select data-key="s6_d${c}_tier" onchange="sync(this);updateBench();"><option value="">—</option>
-      <option>Ready Now</option><option>Ready Soon</option><option>Ready Later</option><option>Unready</option></select></td>
+    <td><select data-key="s6_d${c}_tier" onchange="sync(this);updateBench();"><option value="">—</option><option>Ready Now</option><option>Ready Soon</option><option>Ready Later</option><option>Unready</option></select></td>
     <td><input type="text" data-key="s6_d${c}_rock" placeholder="Rock (brief)" oninput="sync(this)"></td>
     <td><input type="text" data-key="s6_d${c}_mentor" placeholder="Mentor" oninput="sync(this)"></td>
     <td><input type="text" data-key="s6_d${c}_ms" placeholder="Next milestone" oninput="sync(this)"></td>
