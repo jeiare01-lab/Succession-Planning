@@ -280,7 +280,7 @@
     <div class="card">
       <div class="card-title">Role Being Planned For</div>
       <div class="row2">
-        <div class="field"><label>Critical Role / Position</label><input type="text" data-key="s1_role" placeholder="e.g. Operations Manager" oninput="sync(this)"></div>
+        <div class="field"><label>Critical Role / Position</label><input type="text" data-key="s1_role" placeholder="e.g. Operations Manager" oninput="sync(this);updateRoleDisplay()"></div>
         <div class="field"><label>Current Role Holder</label><input type="text" data-key="s1_holder" placeholder="Current person in this role" oninput="sync(this)"></div>
       </div>
       <div class="field"><label>Why is this role critical?</label><textarea data-key="s1_why_critical" placeholder="What breaks down if this role is vacant for 30 days?" oninput="sync(this)"></textarea></div>
@@ -308,6 +308,11 @@
     <div class="sh-tag">Section 2 · 2:00 – 3:00 PM</div>
     <div class="sh-title">Understanding the Role &amp;<br><em>Creating a Transition Plan</em></div>
     <div class="sh-desc">Define what your role truly demands — accountabilities, excellence indicators, and key relationships — then build a phased transition plan.</div>
+    <div style="display:flex;align-items:center;gap:12px;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:4px;padding:14px 18px;margin-bottom:20px;">
+      <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.15em;color:var(--gold-dim);text-transform:uppercase;white-space:nowrap;">Role in Focus</div>
+      <div style="width:1px;height:20px;background:var(--border);flex-shrink:0;"></div>
+      <div id="s2RoleDisplay" style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--gold);font-style:italic;">—</div>
+    </div>
     <div class="card">
       <div class="card-title">The 4 Essential Questions</div>
       <div class="field"><label>1. Top 3 Accountabilities — outcomes, not tasks</label><p class="helper">Verifiable, specific, time-bound.</p><div id="s2Accs"></div><button class="add-btn" onclick="addAcc()">+ Add Accountability</button></div>
@@ -342,6 +347,9 @@
     <div class="sh-tag">Section 3 · 3:00 – 4:00 PM</div>
     <div class="sh-title">Values, GWC &amp;<br><em>Competency Calibration</em></div>
     <div class="sh-desc">Rate each of your nominated candidates independently. Your ratings are private — they will only be shared with the group when the facilitator reveals them.</div>
+    <div style="display:flex;align-items:center;gap:8px;background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.15);border-radius:3px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--gold-dim);">
+      <span>✦</span><span>Candidate names are pre-filled from your Section 1 nominations. You can edit them if needed.</span>
+    </div>
     <div class="callout"><strong style="color:var(--green)">+</strong> = Consistent pattern &nbsp;·&nbsp; <strong style="color:var(--amber)">+/–</strong> = Sometimes / Inconsistent &nbsp;·&nbsp; <strong style="color:var(--red)">–</strong> = Pattern of absence</div>
     <div id="s3Cards"></div>
     <button class="add-btn" onclick="addS3()">+ Add Candidate to Rate</button>
@@ -353,6 +361,9 @@
     <div class="sh-tag">Section 4 · 4:00 – 4:30 PM</div>
     <div class="sh-title">Growth<br><em>Journey Map</em></div>
     <div class="sh-desc">One map per successor. Convert each Readiness Tier into a personalized development roadmap.</div>
+    <div style="display:flex;align-items:center;gap:8px;background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.15);border-radius:3px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--gold-dim);">
+      <span>✦</span><span>Successor names and tiers are pre-filled from your Section 1 & 3 entries.</span>
+    </div>
     <div class="callout">Ready Soon (2/3 GWC) → 0–3 and 3–6 month bands only. &nbsp;&nbsp; Ready Later (1/3 GWC) → All four bands (0–18 months).</div>
     <div id="s4Maps"></div>
     <button class="add-btn" onclick="addMap()">+ Add Growth Journey Map</button>
@@ -364,6 +375,9 @@
     <div class="sh-tag">Section 5 · 4:00 – 4:30 PM</div>
     <div class="sh-title">Development<br><em>Rock Planner</em></div>
     <div class="sh-desc">Convert the top 1–3 development priorities into SMART Rocks tied to PGB's four EOS Strategic Rocks.</div>
+    <div style="display:flex;align-items:center;gap:8px;background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.15);border-radius:3px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--gold-dim);">
+      <span>✦</span><span>Successor names are pre-filled from your Section 1 nominations. One rock is created per candidate by default.</span>
+    </div>
     <div class="card">
       <div class="card-title">PGB's 4 EOS Strategic Rocks</div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
@@ -383,6 +397,9 @@
     <div class="sh-tag">Section 6 · 4:30 – 4:45 PM</div>
     <div class="sh-title">Succession Dashboard<br><em>&amp; Governance</em></div>
     <div class="sh-desc">Complete your portion of the succession dashboard. The facilitator will consolidate all participants' entries into the master view.</div>
+    <div style="display:flex;align-items:center;gap:8px;background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.15);border-radius:3px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--gold-dim);">
+      <span>✦</span><span>Successor names, roles, and tiers are pre-filled from your earlier sections. Fill in the remaining columns.</span>
+    </div>
     <div class="bench">
       <div class="bc now"><div class="bc-num" id="bNow">0</div><div class="bc-lbl">Ready Now</div></div>
       <div class="bc soon"><div class="bc-num" id="bSoon">0</div><div class="bc-lbl">Ready Soon</div></div>
@@ -451,6 +468,10 @@ async function init() {
   addS3();addMap();addRock();addDash();
   // load saved data
   await loadMine();
+  // recalculate tiers from loaded ratings
+  for(let i=1;i<=s3C;i++) calcTier(i);
+  propagateCandidates();
+  updateRoleDisplay();
 }
 
 // ── SYNC ──
@@ -479,8 +500,8 @@ async function loadMine() {
       if(btn)applyRating(btn,row.value);return;
     }
     if(localKey.startsWith('tier:')){
-      const card=document.querySelector(`[data-tier-key="${localKey.replace('tier:','')}"][data-tier="${row.value}"]`);
-      if(card)applyTier(card);updateBench();return;
+      // tiers are now auto-calculated from ratings — skip manual restore
+      return;
     }
     const el=document.querySelector(`[data-key="${localKey}"]`);
     if(el)el.value=row.value;
@@ -507,15 +528,126 @@ function addCandidate(){
   const div=document.createElement('div');div.className='entry';div.id='cand'+c;
   div.innerHTML=`<div class="entry-n">${String(c).padStart(2,'0')}</div>
     <div class="row2" style="padding-right:40px;">
-      <div class="field"><label>Candidate Name</label><input type="text" data-key="s1_cand${c}_name" placeholder="Full name" oninput="sync(this)"></div>
-      <div class="field"><label>Current Role</label><input type="text" data-key="s1_cand${c}_role" placeholder="Current position" oninput="sync(this)"></div>
-      <div class="field"><label>Target Role</label><input type="text" data-key="s1_cand${c}_target" placeholder="Role being considered for" oninput="sync(this)"></div>
+      <div class="field"><label>Candidate Name</label><input type="text" data-key="s1_cand${c}_name" placeholder="Full name" oninput="sync(this);propagateCandidates()"></div>
+      <div class="field"><label>Current Role</label><input type="text" data-key="s1_cand${c}_role" placeholder="Current position" oninput="sync(this);propagateCandidates()"></div>
+      <div class="field"><label>Target Role</label><input type="text" data-key="s1_cand${c}_target" placeholder="Role being considered for" oninput="sync(this);propagateCandidates()"></div>
       <div class="field"><label>SBU / Function</label><input type="text" data-key="s1_cand${c}_sbu" placeholder="Their SBU or function" oninput="sync(this)"></div>
     </div>
     <div class="field"><label>Why Nominated — Specific Observation</label><textarea data-key="s1_cand${c}_why" placeholder="What specific behavior or result makes this person a candidate?" oninput="sync(this)"></textarea></div>
-    <div style="margin-top:10px;"><button class="btn btn-del" onclick="document.getElementById('cand${c}').remove()">Remove</button></div>`;
+    <div style="margin-top:10px;"><button class="btn btn-del" onclick="document.getElementById('cand${c}').remove();propagateCandidates()">Remove</button></div>`;
   document.getElementById('s1Candidates').appendChild(div);
 }
+
+// ── PROPAGATE CANDIDATES FROM S1 → S3, S4, S5, S6 ──
+function propagateCandidates(){
+  // Collect current nominees from S1
+  const nominees=[];
+  for(let i=1;i<=s1C;i++){
+    const nameEl=document.querySelector(`[data-key="s1_cand${i}_name"]`);
+    const roleEl=document.querySelector(`[data-key="s1_cand${i}_role"]`);
+    const targetEl=document.querySelector(`[data-key="s1_cand${i}_target"]`);
+    if(!nameEl||!nameEl.value.trim())continue;
+    nominees.push({idx:i, name:nameEl.value.trim(), role:roleEl?roleEl.value.trim():'', target:targetEl?targetEl.value.trim():''});
+  }
+
+  // ── S3: PA & GWC ──
+  // Ensure enough S3 cards exist
+  while(s3C < nominees.length){ addS3(); }
+  nominees.forEach((n,i)=>{
+    const c=i+1;
+    const nameEl=document.querySelector(`[data-key="s3_c${c}_name"]`);
+    const targetEl=document.querySelector(`[data-key="s3_c${c}_target"]`);
+    if(nameEl && !nameEl.dataset.manuallyEdited){
+      nameEl.value=n.name;
+      nameEl.style.background='rgba(201,168,76,0.04)';
+    }
+    if(targetEl && !targetEl.dataset.manuallyEdited){
+      targetEl.value=n.target||n.role;
+      targetEl.style.background='rgba(201,168,76,0.04)';
+    }
+  });
+
+  // ── S4: GROWTH JOURNEY MAP ──
+  while(s4C < nominees.length){ addMap(); }
+  nominees.forEach((n,i)=>{
+    const c=i+1;
+    const nameEl=document.querySelector(`[data-key="s4_m${c}_name"]`);
+    const tierEl=document.querySelector(`[data-key="s4_m${c}_tier"]`);
+    if(nameEl && !nameEl.dataset.manuallyEdited){
+      nameEl.value=n.name;
+      nameEl.style.background='rgba(201,168,76,0.04)';
+    }
+    // auto-fill tier from S3 auto-calc if available
+    const tierBadge=document.getElementById('tier-badge-'+c);
+    if(tierEl && tierBadge && !tierEl.dataset.manuallyEdited){
+      const t=tierBadge.textContent;
+      const validTiers=['Ready Now','Ready Soon','Ready Later'];
+      if(validTiers.includes(t)) tierEl.value=t;
+    }
+  });
+
+  // ── S5: DEV ROCK PLANNER ──
+  // One rock per nominee by default
+  while(s5C < nominees.length){ addRock(); }
+  nominees.forEach((n,i)=>{
+    const c=i+1;
+    const succEl=document.querySelector(`[data-key="s5_r${c}_successor"]`);
+    if(succEl && !succEl.dataset.manuallyEdited){
+      succEl.value=n.name;
+      succEl.style.background='rgba(201,168,76,0.04)';
+    }
+    const ownerEl=document.querySelector(`[data-key="s5_r${c}_owner"]`);
+    if(ownerEl && !ownerEl.dataset.manuallyEdited){
+      ownerEl.value=n.name;
+      ownerEl.style.background='rgba(201,168,76,0.04)';
+    }
+  });
+
+  // ── S6: DASHBOARD ──
+  while(s6C < nominees.length){ addDash(); }
+  nominees.forEach((n,i)=>{
+    const c=i+1;
+    const nameEl=document.querySelector(`[data-key="s6_d${c}_name"]`);
+    const curEl=document.querySelector(`[data-key="s6_d${c}_cur"]`);
+    const tgtEl=document.querySelector(`[data-key="s6_d${c}_tgt"]`);
+    if(nameEl && !nameEl.dataset.manuallyEdited){
+      nameEl.value=n.name;
+      nameEl.style.background='rgba(201,168,76,0.04)';
+    }
+    if(curEl && !curEl.dataset.manuallyEdited){
+      curEl.value=n.role;
+      curEl.style.background='rgba(201,168,76,0.04)';
+    }
+    if(tgtEl && !tgtEl.dataset.manuallyEdited){
+      tgtEl.value=n.target;
+      tgtEl.style.background='rgba(201,168,76,0.04)';
+    }
+    // pull tier from S3 auto-calc badge if set
+    const s3Badge=document.getElementById('tier-badge-'+c);
+    const tierEl=document.querySelector(`[data-key="s6_d${c}_tier"]`);
+    if(tierEl && s3Badge && !tierEl.dataset.manuallyEdited){
+      const t=s3Badge.textContent;
+      const validTiers=['Ready Now','Ready Soon','Ready Later','Unready'];
+      if(validTiers.includes(t)){tierEl.value=t;updateBench();}
+    }
+  });
+
+  updateProgress();
+}
+
+// ── ROLE DISPLAY — S1 → S2 ──
+function updateRoleDisplay(){
+  const roleEl=document.querySelector('[data-key="s1_role"]');
+  const display=document.getElementById('s2RoleDisplay');
+  if(!display)return;
+  const val=roleEl?roleEl.value.trim():'';
+  display.textContent=val||'—';
+  display.style.color=val?'var(--gold)':'var(--dim)';
+  display.style.fontStyle=val?'italic':'normal';
+}
+
+// Mark a field as manually edited so auto-propagation stops overwriting it
+function markManual(el){ el.dataset.manuallyEdited='1'; el.style.background=''; sync(el); }
 
 // ── SECTION 2 ──
 function addAcc(){s2A++;const c=s2A;const div=document.createElement('div');div.style.cssText='display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;';div.innerHTML=`<span style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold-dim);padding-top:10px;min-width:18px;">${c}.</span><input type="text" data-key="s2_acc${c}" placeholder="Outcome-based accountability" oninput="sync(this)" style="flex:1;"><button class="btn btn-del" style="margin-top:2px;" onclick="this.parentElement.remove()">×</button>`;document.getElementById('s2Accs').appendChild(div);}
@@ -528,8 +660,8 @@ function addS3(){
   const div=document.createElement('div');div.className='card';div.id='s3c'+c;
   div.innerHTML=`<div class="card-title">Candidate ${c}</div>
     <div class="row2" style="margin-bottom:14px;">
-      <div class="field"><label>Candidate Name</label><input type="text" data-key="s3_c${c}_name" placeholder="Name" oninput="sync(this)"></div>
-      <div class="field"><label>Target Role</label><input type="text" data-key="s3_c${c}_target" placeholder="Role being assessed for" oninput="sync(this)"></div>
+      <div class="field"><label>Candidate Name</label><input type="text" data-key="s3_c${c}_name" placeholder="Name" oninput="markManual(this)"></div>
+      <div class="field"><label>Target Role</label><input type="text" data-key="s3_c${c}_target" placeholder="Role being assessed for" oninput="markManual(this)"></div>
     </div>
     <div style="margin-bottom:14px;">
       <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);letter-spacing:.12em;margin-bottom:10px;text-transform:uppercase;">Core Values — All 3 must score "+" to qualify</div>
@@ -549,12 +681,11 @@ function addS3(){
       <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);letter-spacing:.12em;margin-bottom:8px;text-transform:uppercase;">Competency Assessment</div>
       <div class="comp-g">${comps.map((n,i)=>`<div class="comp-r"><span class="comp-num">0${i+1}</span><span class="comp-n">${n}</span><div class="rg">${rbHtml('s3_c'+c+'_comp'+i)}</div></div>`).join('')}</div>
     </div>
-    <div><label>Consensus Readiness Tier</label>
-      <div class="tier-grid">
-        ${tcHtml(c,'now','Ready Now','3/3 CV · 3/3 GWC · 6/6 CA','var(--green)')}
-        ${tcHtml(c,'soon','Ready Soon','3/3 CV · 2/3 GWC · 4+/6 CA','var(--blue)')}
-        ${tcHtml(c,'later','Ready Later','3/3 CV · 1/3 GWC · 3+/6 CA','var(--amber)')}
-        ${tcHtml(c,'unready','Unready','Fails CV · 0/3 GWC · 1(–)/6 CA','var(--red)')}
+    <div id="tier-display-${c}" style="margin-bottom:14px;">
+      <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);letter-spacing:.12em;margin-bottom:10px;text-transform:uppercase;">Readiness Tier <span style="font-family:'DM Sans',sans-serif;font-size:9px;color:var(--dim);font-weight:400;letter-spacing:0;text-transform:none;">— auto-calculated from ratings above</span></div>
+      <div id="tier-result-${c}" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg-panel);border:1px solid var(--border);border-radius:4px;">
+        <div id="tier-badge-${c}" style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:.1em;padding:6px 18px;border-radius:3px;border:1px solid var(--border);color:var(--dim);background:var(--bg-input);">Not yet rated</div>
+        <div id="tier-reason-${c}" style="font-size:11px;color:var(--dim);line-height:1.6;"></div>
       </div>
     </div>
     <div class="field" style="margin-top:10px;"><label>Development Focus</label><textarea data-key="s3_c${c}_devfocus" placeholder="Top 2–3 development priorities based on the ratings above." oninput="sync(this)"></textarea></div>
@@ -563,21 +694,160 @@ function addS3(){
 }
 
 function rbHtml(key){return `<button class="rb" data-rating-key="${key}" data-val="plus" onclick="setRating(this,'plus')">+</button><button class="rb" data-rating-key="${key}" data-val="mixed" onclick="setRating(this,'mixed')">+/–</button><button class="rb" data-rating-key="${key}" data-val="minus" onclick="setRating(this,'minus')">–</button>`;}
-function tcHtml(c,tier,label,crit,color){return `<div class="tc" data-tier-key="s3_c${c}_tier" data-tier="${tier}" onclick="setTier(this,'${tier}')"><div class="tc-lbl" style="color:${color};">${label}</div><div class="tc-cr">${crit}</div></div>`;}
 
-async function setRating(btn,val){applyRating(btn,val);await dbUpsert(PREFIX+'rating:'+btn.dataset.ratingKey,val);}
-function applyRating(btn,val){btn.closest('.rg').querySelectorAll('.rb').forEach(b=>b.className='rb');btn.classList.add(val==='plus'?'rp':val==='mixed'?'rm':'rn');}
-async function setTier(card,tier){applyTier(card);await dbUpsert(PREFIX+'tier:'+card.dataset.tierKey,tier);updateBench();}
-function applyTier(card){card.closest('.tier-grid').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));card.classList.add('sel');}
-function updateBench(){const c={now:0,soon:0,later:0,unready:0};document.querySelectorAll('.tc.sel').forEach(card=>{const t=card.dataset.tier;if(c[t]!==undefined)c[t]++;});document.getElementById('bNow').textContent=c.now;document.getElementById('bSoon').textContent=c.soon;document.getElementById('bLater').textContent=c.later;document.getElementById('bUnr').textContent=c.unready;}
+// Keep tcHtml for backward compat with loadMine (won't render new cards but used by facilitator)
+function tcHtml(c,tier,label,crit,color){return '';}
+
+async function setRating(btn,val){
+  applyRating(btn,val);
+  const key=btn.dataset.ratingKey;
+  await dbUpsert(PREFIX+'rating:'+key,val);
+  // extract candidate index from key e.g. s3_c2_cv0
+  const m=key.match(/^s3_c(\d+)_/);
+  if(m) calcTier(parseInt(m[1]));
+}
+
+function applyRating(btn,val){
+  btn.closest('.rg').querySelectorAll('.rb').forEach(b=>b.className='rb');
+  btn.classList.add(val==='plus'?'rp':val==='mixed'?'rm':'rn');
+}
+
+// ── AUTO TIER CALCULATION ──
+function calcTier(c){
+  // Gather CV ratings (0=plus, 1=mixed, 2=minus)
+  const cvRatings=[0,1,2].map(i=>{
+    const btn=document.querySelector(`.rb.rp[data-rating-key="s3_c${c}_cv${i}"]`)?'plus':
+              document.querySelector(`.rb.rm[data-rating-key="s3_c${c}_cv${i}"]`)?'mixed':
+              document.querySelector(`.rb.rn[data-rating-key="s3_c${c}_cv${i}"]`)?'minus':null;
+    return btn;
+  });
+  const gwcRatings=[0,1,2].map(i=>{
+    return document.querySelector(`.rb.rp[data-rating-key="s3_c${c}_gwc${i}"]`)?'plus':
+           document.querySelector(`.rb.rm[data-rating-key="s3_c${c}_gwc${i}"]`)?'mixed':
+           document.querySelector(`.rb.rn[data-rating-key="s3_c${c}_gwc${i}"]`)?'minus':null;
+  });
+  const compRatings=[0,1,2,3,4,5].map(i=>{
+    return document.querySelector(`.rb.rp[data-rating-key="s3_c${c}_comp${i}"]`)?'plus':
+           document.querySelector(`.rb.rm[data-rating-key="s3_c${c}_comp${i}"]`)?'mixed':
+           document.querySelector(`.rb.rn[data-rating-key="s3_c${c}_comp${i}"]`)?'minus':null;
+  });
+
+  // Count scores
+  const cvPlus=cvRatings.filter(r=>r==='plus').length;
+  const cvMinus=cvRatings.filter(r=>r==='minus').length;
+  const gwcPlus=gwcRatings.filter(r=>r==='plus').length;
+  const gwcRated=gwcRatings.filter(r=>r!==null).length;
+  const compPlus=compRatings.filter(r=>r==='plus').length;
+  const compMinus=compRatings.filter(r=>r==='minus').length;
+  const compRated=compRatings.filter(r=>r!==null).length;
+
+  const badgeEl=document.getElementById('tier-badge-'+c);
+  const reasonEl=document.getElementById('tier-reason-'+c);
+  if(!badgeEl)return;
+
+  // Not enough ratings yet
+  const totalRated=cvRatings.filter(r=>r!==null).length+gwcRated+compRated;
+  if(totalRated<3){
+    badgeEl.textContent='Incomplete';
+    badgeEl.style.cssText='font-family:Cinzel,serif;font-size:13px;letter-spacing:.1em;padding:6px 18px;border-radius:3px;border:1px solid var(--border);color:var(--dim);background:var(--bg-input);';
+    reasonEl.textContent='Complete more ratings above to calculate tier.';
+    reasonEl.style.color='var(--dim)';
+    saveTier(c,'');
+    return;
+  }
+
+  let tier, color, bgColor, borderColor, reasons=[], flags=[];
+
+  // RULE 1: Any CV minus → Unready (hard stop)
+  if(cvMinus>0){
+    tier='Unready';
+    color='var(--red)';bgColor='rgba(184,72,72,0.15)';borderColor='var(--red)';
+    flags.push('⚠ Failed Core Values — a minus on any value is a disqualifier');
+  }
+  // RULE 2: Any comp minus → Unready
+  else if(compMinus>0){
+    tier='Unready';
+    color='var(--red)';bgColor='rgba(184,72,72,0.15)';borderColor='var(--red)';
+    flags.push('⚠ Competency gap too significant — a minus rating requires reassessment in 6 months');
+  }
+  // RULE 3: All CV plus, all GWC plus, all comp plus → Ready Now
+  else if(cvPlus===3 && gwcPlus===3 && compPlus===6){
+    tier='Ready Now';
+    color='var(--green)';bgColor='rgba(91,152,112,0.15)';borderColor='var(--green)';
+    reasons.push('3/3 Core Values ✓');
+    reasons.push('3/3 GWC ✓');
+    reasons.push('6/6 Competencies ✓');
+  }
+  // RULE 4: All CV plus, 2/3 GWC plus, 4+ comp plus → Ready Soon
+  else if(cvPlus===3 && gwcPlus>=2 && compPlus>=4){
+    tier='Ready Soon';
+    color='var(--blue)';bgColor='rgba(72,120,160,0.15)';borderColor='var(--blue)';
+    reasons.push('3/3 Core Values ✓');
+    reasons.push(`${gwcPlus}/3 GWC ✓`);
+    reasons.push(`${compPlus}/6 Competencies ✓`);
+    if(gwcPlus<3) flags.push(`${3-gwcPlus} GWC gap${3-gwcPlus>1?'s':''} to close`);
+    if(compPlus<6) flags.push(`${6-compPlus} competency gap${6-compPlus>1?'s':''} to develop`);
+  }
+  // RULE 5: All CV plus, 1/3 GWC plus, 3+ comp plus → Ready Later
+  else if(cvPlus===3 && gwcPlus>=1 && compPlus>=3){
+    tier='Ready Later';
+    color='var(--amber)';bgColor='rgba(196,135,42,0.15)';borderColor='var(--amber)';
+    reasons.push('3/3 Core Values ✓');
+    reasons.push(`${gwcPlus}/3 GWC`);
+    reasons.push(`${compPlus}/6 Competencies`);
+    flags.push(`Significant development needed — ${3-gwcPlus} GWC gap${3-gwcPlus>1?'s':''}, ${6-compPlus} competency gap${6-compPlus>1?'s':''}`);
+  }
+  // RULE 6: CV not all plus but no minus, GWC low → Unready
+  else{
+    tier='Unready';
+    color='var(--red)';bgColor='rgba(184,72,72,0.15)';borderColor='var(--red)';
+    if(cvPlus<3) flags.push(`Only ${cvPlus}/3 Core Values rated plus — all three required`);
+    if(gwcPlus===0) flags.push('No GWC criteria met');
+    if(compPlus<3) flags.push(`Only ${compPlus}/6 competencies demonstrated`);
+  }
+
+  badgeEl.textContent=tier;
+  badgeEl.style.cssText=`font-family:'Cinzel',serif;font-size:13px;letter-spacing:.1em;padding:6px 18px;border-radius:3px;border:1px solid ${borderColor};color:${color};background:${bgColor};white-space:nowrap;`;
+
+  const allReasons=[...reasons,...flags];
+  reasonEl.innerHTML=allReasons.map(r=>`<div style="margin-bottom:2px;">${r}</div>`).join('');
+  reasonEl.style.color=flags.length?'var(--muted)':'var(--green)';
+
+  saveTier(c,tier);
+  updateBench();
+  propagateCandidates();
+}
+
+async function saveTier(c, tier){
+  const key='tier:s3_c'+c+'_tier';
+  await dbUpsert(PREFIX+key, tier);
+}
+
+function updateBench(){
+  // Count by reading the tier-badge elements
+  const counts={now:0,soon:0,later:0,unready:0};
+  for(let i=1;i<=s3C;i++){
+    const badge=document.getElementById('tier-badge-'+i);
+    if(!badge)continue;
+    const t=badge.textContent;
+    if(t==='Ready Now')counts.now++;
+    else if(t==='Ready Soon')counts.soon++;
+    else if(t==='Ready Later')counts.later++;
+    else if(t==='Unready')counts.unready++;
+  }
+  document.getElementById('bNow').textContent=counts.now;
+  document.getElementById('bSoon').textContent=counts.soon;
+  document.getElementById('bLater').textContent=counts.later;
+  document.getElementById('bUnr').textContent=counts.unready;
+}
 
 // ── SECTION 4 ──
 function addMap(){
   s4C++;const c=s4C;const div=document.createElement('div');div.className='card';div.id='map'+c;
   div.innerHTML=`<div class="card-title">Growth Journey Map — Successor ${c}</div>
     <div class="row2" style="margin-bottom:14px;">
-      <div class="field"><label>Successor Name</label><input type="text" data-key="s4_m${c}_name" placeholder="Name" oninput="sync(this)"></div>
-      <div class="field"><label>Readiness Tier</label><select data-key="s4_m${c}_tier" onchange="sync(this)"><option value="">Select tier</option><option>Ready Now</option><option>Ready Soon</option><option>Ready Later</option></select></div>
+      <div class="field"><label>Successor Name</label><input type="text" data-key="s4_m${c}_name" placeholder="Name" oninput="markManual(this)"></div>
+      <div class="field"><label>Readiness Tier</label><select data-key="s4_m${c}_tier" onchange="markManual(this)"><option value="">Select tier</option><option>Ready Now</option><option>Ready Soon</option><option>Ready Later</option></select></div>
     </div>
     <div class="field"><label>1. Competency Focus (max 3)</label><textarea data-key="s4_m${c}_comp" placeholder="e.g. Leadership (NT) — Current: 2 → Target: 4. Method: Lead cross-functional team for Q3 process review." oninput="sync(this)" style="min-height:80px;"></textarea></div>
     <div class="field"><label>2. Stretch Assignment</label><textarea data-key="s4_m${c}_stretch" placeholder="Specific deliverable, scope, and deadline." oninput="sync(this)" style="min-height:72px;"></textarea></div>
@@ -602,14 +872,14 @@ function addRock(){
   s5C++;const c=s5C;const div=document.createElement('div');div.className='entry';div.id='rock'+c;
   div.innerHTML=`<div class="entry-n">${String(c).padStart(2,'0')}</div>
     <div class="row2" style="padding-right:44px;">
-      <div class="field"><label>Successor This Rock Serves</label><input type="text" data-key="s5_r${c}_successor" placeholder="Name" oninput="sync(this)"></div>
+      <div class="field"><label>Successor This Rock Serves</label><input type="text" data-key="s5_r${c}_successor" placeholder="Name" oninput="markManual(this)"></div>
       <div class="field"><label>Links to EOS Rock</label><select data-key="s5_r${c}_eos" onchange="sync(this)"><option value="">Select PGB Strategic Rock</option><option>Succession Plan in Place</option><option>Stronger Cash Position</option><option>Productivity &amp; Process Efficiencies</option><option>Stronger Partnerships &amp; JVs</option></select></div>
     </div>
     <div class="field"><label>Development Rock Statement (SMART)</label><textarea data-key="s5_r${c}_statement" placeholder="Write the complete SMART Rock statement here…" oninput="sync(this)"></textarea></div>
     <div class="row3">
       <div class="field"><label>KPI / Measurable Outcome</label><input type="text" data-key="s5_r${c}_kpi" placeholder="e.g. 3 feedback reports submitted" oninput="sync(this)"></div>
       <div class="field"><label>Due Date (specific)</label><input type="text" data-key="s5_r${c}_date" placeholder="e.g. June 30, 2025" oninput="sync(this)"></div>
-      <div class="field"><label>Rock Owner</label><input type="text" data-key="s5_r${c}_owner" placeholder="Successor's name" oninput="sync(this)"></div>
+      <div class="field"><label>Rock Owner</label><input type="text" data-key="s5_r${c}_owner" placeholder="Successor's name" oninput="markManual(this)"></div>
     </div>
     <div style="margin-top:10px;"><button class="btn btn-del" onclick="document.getElementById('rock${c}').remove()">Remove Rock</button></div>`;
   document.getElementById('s5Rocks').appendChild(div);
@@ -618,10 +888,10 @@ function addRock(){
 // ── SECTION 6 ──
 function addDash(){
   s6C++;const c=s6C;const tr=document.createElement('tr');tr.id='dr'+c;
-  tr.innerHTML=`<td><input type="text" data-key="s6_d${c}_name" placeholder="Name" oninput="sync(this)"></td>
-    <td><input type="text" data-key="s6_d${c}_cur" placeholder="Current role" oninput="sync(this)"></td>
-    <td><input type="text" data-key="s6_d${c}_tgt" placeholder="Target role" oninput="sync(this)"></td>
-    <td><select data-key="s6_d${c}_tier" onchange="sync(this);updateBench();"><option value="">—</option><option>Ready Now</option><option>Ready Soon</option><option>Ready Later</option><option>Unready</option></select></td>
+  tr.innerHTML=`<td><input type="text" data-key="s6_d${c}_name" placeholder="Name" oninput="markManual(this)"></td>
+    <td><input type="text" data-key="s6_d${c}_cur" placeholder="Current role" oninput="markManual(this)"></td>
+    <td><input type="text" data-key="s6_d${c}_tgt" placeholder="Target role" oninput="markManual(this)"></td>
+    <td><select data-key="s6_d${c}_tier" onchange="markManual(this);updateBench();"><option value="">—</option><option>Ready Now</option><option>Ready Soon</option><option>Ready Later</option><option>Unready</option></select></td>
     <td><input type="text" data-key="s6_d${c}_rock" placeholder="Rock (brief)" oninput="sync(this)"></td>
     <td><input type="text" data-key="s6_d${c}_mentor" placeholder="Mentor" oninput="sync(this)"></td>
     <td><input type="text" data-key="s6_d${c}_ms" placeholder="Next milestone" oninput="sync(this)"></td>
