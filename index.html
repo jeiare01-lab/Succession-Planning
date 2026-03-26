@@ -281,7 +281,7 @@
       <div class="card-title">Role Being Planned For</div>
       <div class="row2">
         <div class="field"><label>Critical Role / Position</label><input type="text" data-key="s1_role" placeholder="e.g. Operations Manager" oninput="sync(this);updateRoleDisplay()"></div>
-        <div class="field"><label>Current Role Holder</label><input type="text" data-key="s1_holder" placeholder="Current person in this role" oninput="sync(this)"></div>
+        <div class="field"><label>Current Role Holder</label><input type="text" data-key="s1_holder" placeholder="Current person in this role" oninput="sync(this);updateRoleDisplay()"></div>
       </div>
       <div class="field"><label>Why is this role critical?</label><textarea data-key="s1_why_critical" placeholder="What breaks down if this role is vacant for 30 days?" oninput="sync(this)"></textarea></div>
     </div>
@@ -307,14 +307,25 @@
   <div class="section" id="s2">
     <div class="sh-tag">Section 2 · 2:00 – 3:00 PM</div>
     <div class="sh-title">Understanding the Role &amp;<br><em>Creating a Transition Plan</em></div>
-    <div class="sh-desc">Define what your role truly demands — accountabilities, excellence indicators, and key relationships — then build a phased transition plan.</div>
-    <div style="display:flex;align-items:center;gap:12px;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:4px;padding:14px 18px;margin-bottom:20px;">
-      <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.15em;color:var(--gold-dim);text-transform:uppercase;white-space:nowrap;">Role in Focus</div>
-      <div style="width:1px;height:20px;background:var(--border);flex-shrink:0;"></div>
-      <div id="s2RoleDisplay" style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--gold);font-style:italic;">—</div>
+    <div style="margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border);">
+      <div style="font-size:13px;color:var(--muted);line-height:1.75;margin-bottom:16px;">Define what your role truly demands — accountabilities, excellence indicators, and key relationships — then build a phased transition plan.</div>
+      <div style="display:flex;align-items:center;gap:0;background:var(--bg-card);border:1px solid rgba(201,168,76,.3);border-radius:4px;overflow:hidden;">
+        <div style="padding:14px 18px;background:rgba(201,168,76,.1);border-right:1px solid rgba(201,168,76,.2);flex-shrink:0;">
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.18em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:3px;">Role in Focus</div>
+          <div style="font-size:10px;color:var(--dim);">from Section 1</div>
+        </div>
+        <div style="padding:14px 20px;flex:1;">
+          <div id="s2RoleDisplay" style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--gold);font-style:italic;line-height:1.2;">—</div>
+          <div id="s2HolderDisplay" style="font-size:11px;color:var(--muted);margin-top:3px;"></div>
+        </div>
+        <div style="padding:14px 18px;border-left:1px solid var(--border);flex-shrink:0;text-align:center;">
+          <div style="font-size:10px;color:var(--dim);margin-bottom:4px;">Go back to edit</div>
+          <button onclick="go('s1',document.querySelectorAll('.nav-item')[1])" style="padding:5px 12px;background:transparent;border:1px solid var(--border);border-radius:3px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;">← Section 1</button>
+        </div>
+      </div>
     </div>
     <div class="card">
-      <div class="card-title">The 4 Essential Questions</div>
+      <div class="card-title" id="s2QuestionsTitle">The 4 Essential Questions</div>
       <div class="field"><label>1. Top 3 Accountabilities — outcomes, not tasks</label><p class="helper">Verifiable, specific, time-bound.</p><div id="s2Accs"></div><button class="add-btn" onclick="addAcc()">+ Add Accountability</button></div>
       <hr>
       <div class="field"><label>2. What does excellence look like?</label><textarea data-key="s2_excellence" placeholder="Observable behaviors only. What do you actually SEE?" oninput="sync(this)" style="min-height:90px;"></textarea></div>
@@ -324,7 +335,7 @@
       <div class="field"><label>4. Common failure modes in this transition</label><textarea data-key="s2_failures" placeholder="Where do people struggle? These become non-negotiable development priorities." oninput="sync(this)" style="min-height:90px;"></textarea></div>
     </div>
     <div class="card">
-      <div class="card-title">Phased Transition Plan</div>
+      <div class="card-title" id="s2TransitionTitle">Phased Transition Plan</div>
       <div class="phase-grid">
         <div class="phase-box"><div class="phase-lbl">Phase 1 · Months 1–3</div><div class="phase-title">Shadow &amp; Learn</div><textarea data-key="s2_phase1" placeholder="What does the successor observe?" oninput="sync(this)" style="min-height:76px;font-size:11px;"></textarea></div>
         <div class="phase-box"><div class="phase-lbl">Phase 2 · Months 3–6</div><div class="phase-title">Lead with Support</div><textarea data-key="s2_phase2" placeholder="Which accountabilities does the successor own first?" oninput="sync(this)" style="min-height:76px;font-size:11px;"></textarea></div>
@@ -638,12 +649,29 @@ function propagateCandidates(){
 // ── ROLE DISPLAY — S1 → S2 ──
 function updateRoleDisplay(){
   const roleEl=document.querySelector('[data-key="s1_role"]');
+  const holderEl=document.querySelector('[data-key="s1_holder"]');
   const display=document.getElementById('s2RoleDisplay');
+  const holderDisplay=document.getElementById('s2HolderDisplay');
+  const questionsTitle=document.getElementById('s2QuestionsTitle');
+  const transitionTitle=document.getElementById('s2TransitionTitle');
   if(!display)return;
-  const val=roleEl?roleEl.value.trim():'';
-  display.textContent=val||'—';
-  display.style.color=val?'var(--gold)':'var(--dim)';
-  display.style.fontStyle=val?'italic':'normal';
+  const role=roleEl?roleEl.value.trim():'';
+  const holder=holderEl?holderEl.value.trim():'';
+  if(role){
+    display.textContent=role;
+    display.style.color='var(--gold)';
+    display.style.fontStyle='italic';
+    if(holderDisplay) holderDisplay.textContent=holder?'Currently held by: '+holder:'';
+    if(questionsTitle) questionsTitle.textContent='The 4 Essential Questions — '+role;
+    if(transitionTitle) transitionTitle.textContent='Transition Plan — '+role;
+  } else {
+    display.textContent='No role entered yet — go back to Section 1';
+    display.style.color='var(--dim)';
+    display.style.fontStyle='normal';
+    if(holderDisplay) holderDisplay.textContent='';
+    if(questionsTitle) questionsTitle.textContent='The 4 Essential Questions';
+    if(transitionTitle) transitionTitle.textContent='Phased Transition Plan';
+  }
 }
 
 // Mark a field as manually edited so auto-propagation stops overwriting it
