@@ -6,10 +6,10 @@
 <title>PGB Succession Planning — Workbook</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  :root{--gold:#C9A84C;--gold-light:#E8C96A;--gold-dim:#7A6428;--bg:#0C0C0A;--bg-card:#131310;--bg-panel:#181814;--bg-input:#0E0E0B;--text:#EDE5CC;--muted:#7A7060;--dim:#4A4840;--border:rgba(201,168,76,0.16);--border-hi:rgba(201,168,76,0.5);--green:#5B9870;--amber:#C4872A;--blue:#4878A0;--red:#B84848;}
+  :root{--gold:#A07828;--gold-light:#C9A84C;--gold-dim:#7A5E18;--bg:#F7F5F0;--bg-card:#FFFFFF;--bg-panel:#F0EDE6;--bg-input:#F7F5F0;--text:#1E1C14;--muted:#6A6455;--dim:#A09880;--border:rgba(160,120,40,0.2);--border-hi:rgba(160,120,40,0.55);--green:#2A6B42;--amber:#B07020;--blue:#2E5F8A;--red:#A03030;}
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
-  body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.5;}
+  body::after{display:none;}
 
   /* JOIN */
   #joinScreen{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;}
@@ -19,14 +19,14 @@
   .join-box label{text-align:left;display:block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
   .join-box input,.join-box select{width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:3px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:11px 14px;outline:none;transition:border-color .2s;margin-bottom:16px;}
   .join-box input:focus,.join-box select:focus{border-color:var(--border-hi);}
-  .join-btn{width:100%;padding:13px;background:var(--gold);color:#0C0C0A;border:none;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
-  .join-btn:hover{background:var(--gold-light);}
+  .join-btn{width:100%;padding:13px;background:var(--gold);color:#FFFFFF;border:none;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+  .join-btn:hover{background:var(--gold-light);color:#FFFFFF;}
   .join-note{font-size:11px;color:var(--dim);margin-top:20px;line-height:1.6;}
   .join-privacy{display:flex;align-items:center;gap:8px;background:rgba(201,168,76,.06);border:1px solid var(--border);border-radius:3px;padding:10px 14px;margin-top:16px;font-size:11px;color:var(--muted);text-align:left;}
   .join-privacy-icon{font-size:16px;flex-shrink:0;}
 
   /* TOPBAR */
-  #topBar{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;background:rgba(12,12,10,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;}
+  #topBar{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;background:rgba(247,245,240,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;}
   .tb-logo{font-family:'Cinzel',serif;font-size:15px;color:var(--gold);letter-spacing:.1em;}
   .tb-sep{width:1px;height:18px;background:var(--border);}
   .tb-title{font-size:11px;color:var(--muted);letter-spacing:.05em;flex:1;}
@@ -110,7 +110,7 @@
 
   /* BTNS */
   .btn{padding:10px 22px;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:none;transition:all .2s;}
-  .btn-primary{background:var(--gold);color:#0C0C0A;}
+  .btn-primary{background:var(--gold);color:#FFFFFF;}
   .btn-primary:hover{background:var(--gold-light);transform:translateY(-1px);}
   .btn-del{background:rgba(184,72,72,.12);border:1px solid var(--red);color:var(--red);padding:6px 12px;font-size:11px;}
 
